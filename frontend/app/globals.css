@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #FFF4E6;
+  --color-beige: #F3E5D0;
+  --color-gold: #D6A25E;
+  --color-brown: #6B3E26;
+  --color-dark: #442A1C;
+}
+
+body {
+  @apply bg-[--color-cream] text-[--color-dark] antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
