@@ -6,7 +6,15 @@ import Link from "next/link";
 
 export default function Location() {
   return (
-    <section className='py-24 bg-beige' id='location'>
+    <section className='py-24 bg-beige relative overflow-hidden' id='location'>
+      <div className="absolute inset-0 opacity-10 pointer-events-none mix-blend-multiply">
+        <Image
+          src="/assets/location-bg.png"
+          alt="Map Pattern Background"
+          fill
+          className="object-cover"
+        />
+      </div>
       <div className='max-w-7xl mx-auto px-6'>
         <div className='bg-cream rounded-[3rem] overflow-hidden flex flex-col lg:flex-row shadow-xl'>
           {/* Gambar di kiri */}

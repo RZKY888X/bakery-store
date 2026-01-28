@@ -5,7 +5,15 @@ import Image from "next/image";
 
 export default function Story() {
   return (
-    <section className='py-24 bg-cream' id='story'>
+    <section className='py-24 bg-cream relative overflow-hidden' id='story'>
+      <div className="absolute inset-0 opacity-10 pointer-events-none mix-blend-multiply">
+        <Image
+          src="/assets/background-pattern.png"
+          alt="Background Pattern"
+          fill
+          className="object-cover"
+        />
+      </div>
       <div className='max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center'>
         <div className='relative group'>
           <div className='absolute -inset-4 bg-gold/10 rounded-2xl group-hover:bg-gold/20 transition-colors' />

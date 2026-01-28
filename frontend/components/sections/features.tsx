@@ -24,7 +24,15 @@ export default function Features() {
   ];
 
   return (
-    <section className='py-24 bg-cream'>
+    <section className='py-24 bg-cream relative overflow-hidden'>
+      <div className="absolute inset-0 opacity-10 pointer-events-none mix-blend-multiply">
+        <Image
+          src="/assets/features-bg.png"
+          alt="Wheat Pattern Background"
+          fill
+          className="object-cover"
+        />
+      </div>
       <div className='max-w-7xl mx-auto px-6'>
         <div className='text-center mb-16'>
           <h3 className='font-(family-name:--font-display) text-3xl font-bold uppercase text-brown mb-4'>
