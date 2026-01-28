@@ -25,7 +25,7 @@ export default function Footer() {
   };
 
   const quickLinks = [
-    { name: "Tentang Kami", href: "#story" },
+    { name: "Tentang Kami", href: "/tentang" },
     { name: "Produk Kami", href: "/produk" },
     { name: "Karir", href: "/karir" },
     { name: "Blog", href: "/blog" },

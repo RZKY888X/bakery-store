@@ -4,6 +4,8 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/header";
+import Footer from "@/components/footer"; // ✅ TAMBAH FOOTER
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -29,17 +31,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='id'>
+    <html lang="id">
       <head>
         <link
-          href='https://fonts.googleapis.com/css2?family=Material+Icons+Outlined&display=optional'
-          rel='stylesheet'
+          href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined&display=optional"
+          rel="stylesheet"
         />
       </head>
-      <body
-        className={`${playfair.variable} ${jakarta.variable} font-sans)`}
-      >
-        {children}
+
+      <body className={`${playfair.variable} ${jakarta.variable} font-sans`}>
+        {/* ===== HEADER ===== */}
+        <Header />
+
+        {/* ===== PAGE CONTENT ===== */}
+        <main className="min-h-screen">
+          {children}
+        </main>
+
+        {/* ===== FOOTER ===== */}
+        <Footer />
       </body>
     </html>
   );

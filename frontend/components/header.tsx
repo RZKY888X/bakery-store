@@ -28,10 +28,10 @@ export default function Header() {
 
         {/* Nav tengah */}
         <nav className="hidden md:flex gap-8 text-yellow-900 font-serif text-lg font-semibold uppercase tracking-wide mx-auto">
-          <Link href="#story" className="hover:text-yellow-700 transition">Tentang</Link>
+          <Link href="/tentang" className="hover:text-yellow-700 transition">Tentang</Link>
           <Link href="/produk" className="hover:text-yellow-700 transition">Produk</Link>
-          <Link href="#contact" className="hover:text-yellow-700 transition">Kontak</Link>
-          <Link href="#program" className="hover:text-yellow-700 transition">Program</Link>
+          <Link href="/kontak" className="hover:text-yellow-700 transition">Kontak</Link>
+          <Link href="/program" className="hover:text-yellow-700 transition">Program</Link>
         </nav>
 
         {/* Cart + Hamburger kanan */}
