@@ -1,9 +1,9 @@
 import Image from "next/image";
-import Header from "@/components/header";
+import AchievementCard from "./achievement-card";
 
 export default function TentangPage() {
   return (
-    <main className="w-full bg-[#FFF4E6] text-[#3B2A1F]">
+    <main className="w-full bg-[#FFF4E6] text-[#3B2A1F] font-sans">
       {/* ================= HERO ================= */}
       <section className="relative h-[220px] md:h-[320px] w-full">
         <Image
@@ -14,7 +14,7 @@ export default function TentangPage() {
           priority
         />
         <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-          <h1 className="text-3xl md:text-5xl font-bold text-[#7A4A2E] bg-[#FFF4E6]/90 px-6 py-3 rounded">
+          <h1 className="font-(family-name:--font-display) text-cream text-4xl md:text-6xl font-bold text-shadow">
             Tentang Kami
           </h1>
         </div>
@@ -23,8 +23,8 @@ export default function TentangPage() {
       {/* ================= MOTO ================= */}
       <section className="max-w-6xl mx-auto px-6 py-14 grid md:grid-cols-2 gap-10">
         <div>
-          <p className="text-sm uppercase tracking-wide mb-2">Moto Kami</p>
-          <h2 className="text-3xl font-bold mb-4">Uṣṇa Rasa</h2>
+          <p className="text-sm uppercase tracking-wide mb-2 font-bold">Moto Kami</p>
+          <h2 className="font-display text-3xl font-bold mb-4">Uṣṇa Rasa</h2>
         </div>
 
         <div className="space-y-4 text-sm md:text-base leading-relaxed">
@@ -48,8 +48,8 @@ export default function TentangPage() {
       {/* ================= VISI & MISI ================= */}
       <section className="max-w-6xl mx-auto px-6 pb-16 grid md:grid-cols-2 gap-10">
         <div>
-          <p className="text-sm uppercase tracking-wide mb-2">Visi & Misi</p>
-          <h2 className="text-3xl font-bold">Swadista</h2>
+          <p className="text-sm uppercase tracking-wide mb-2 font-bold">Visi & Misi</p>
+          <h2 className="font-display text-3xl font-bold">Swadista</h2>
         </div>
 
         <div className="space-y-4 text-sm md:text-base leading-relaxed">
@@ -78,34 +78,33 @@ export default function TentangPage() {
       {/* ================= PENCAPAIAN ================= */}
       <section className="bg-[#D6A45E] py-16">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl font-bold mb-12 text-black">Pencapaian</h2>
+          <h2 className="font-display text-3xl font-bold mb-12 text-black">Pencapaian</h2>
 
           <div className="space-y-14">
             {/* Item 1 */}
-            <Achievement
+            <AchievementCard
               title="Menghadirkan Bakery dengan Standar Rasa Global"
               text="Swadista berhasil menghadirkan produk bakery dengan inspirasi internasional yang dipadukan dengan sentuhan rasa tradisional."
               img="/pencapaian1.png"
             />
 
             {/* Item 2 */}
-            <Achievement
+            <AchievementCard
               title="Penggunaan Bahan Berkualitas & Proses Terstandar"
               text="Menggunakan bahan pilihan dan proses produksi yang konsisten untuk menjaga kualitas rasa dan tekstur."
               img="/pencapaian2t.png"
               reverse
-
             />
 
             {/* Item 3 */}
-            <Achievement
+            <AchievementCard
               title="Pengembangan Menu Terinspirasi Dunia"
               text="Ragam produk terinspirasi dari berbagai negara tanpa meninggalkan cita rasa yang akrab bagi lidah Indonesia."
               img="/pencapaian3t.png"
             />
 
             {/* Item 4 */}
-            <Achievement
+            <AchievementCard
               title="Brand dengan Identitas Filosofis"
               text="Membangun brand dengan nilai dan filosofi kuat yang tercermin dalam moto Uṣṇa Rasa."
               img="/pencapaian4t.png"
@@ -117,7 +116,7 @@ export default function TentangPage() {
 
       {/* ================= SUSTAINABILITY ================= */}
       <section className="max-w-4xl mx-auto px-6 py-20 text-center">
-        <h2 className="text-3xl font-bold mb-2">Swadista Lestari</h2>
+        <h2 className="font-display text-3xl font-bold mb-2">Swadista Lestari</h2>
         <p className="text-sm text-gray-700 mb-8">
           Cita rasa yang dijaga agar tetap hidup.
         </p>
@@ -139,36 +138,5 @@ export default function TentangPage() {
         </p>
       </section>
     </main>
-  );
-}
-
-/* ================= COMPONENT ================= */
-
-function Achievement({
-  title,
-  text,
-  img,
-  reverse = false,
-}: {
-  title: string;
-  text: string;
-  img: string;
-  reverse?: boolean;
-}) {
-  return (
-    <div
-      className={`flex flex-col ${
-        reverse ? "md:flex-row-reverse" : "md:flex-row"
-      } gap-6 items-center`}
-    >
-      <div className="relative w-full md:w-1/3 h-[160px] md:h-[180px]">
-        <Image src={img} alt={title} fill className="object-cover rounded-lg" />
-      </div>
-
-      <div className="md:w-2/3 text-black">
-        <h3 className="font-bold mb-2">{title}</h3>
-        <p className="text-sm leading-relaxed">{text}</p>
-      </div>
-    </div>
   );
 }

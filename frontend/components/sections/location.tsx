@@ -1,8 +1,10 @@
 // ============================================================================
 // frontend/components/sections/location.tsx
 // ============================================================================
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { FaMapMarkedAlt, FaClock } from "react-icons/fa";
 
 export default function Location() {
   return (
@@ -33,7 +35,7 @@ export default function Location() {
               <div className='flex gap-4'>
                 <div className='w-10 h-10 rounded-full bg-yellow-200/20 flex items-center justify-center shrink-0'>
                   <span className='material-icons-outlined text-brown'>
-                    location_on
+                    <FaMapMarkedAlt/>
                   </span>
                 </div>
                 <div>
@@ -48,7 +50,7 @@ export default function Location() {
               <div className='flex gap-4'>
                 <div className='w-10 h-10 rounded-full bg-yellow-200/20 flex items-center justify-center shrink-0'>
                   <span className='material-icons-outlined text-brown'>
-                    schedule
+                    <FaClock/>
                   </span>
                 </div>
                 <div>
@@ -59,12 +61,14 @@ export default function Location() {
             </div>
 
             {/* Button */}
-            <Link
-              href='#'
-              className='inline-flex bg-yellow-800 hover:bg-yellow-900 text-white px-10 py-4 rounded-full font-bold shadow-lg'
-            >
-              Petunjuk Arah
-            </Link>
+         <Link
+  href="#"
+  className="group inline-flex items-center gap-2 bg-yellow-800 hover:bg-yellow-900 text-white px-10 py-4 rounded-full font-bold shadow-lg"
+>
+  Petunjuk Arah
+  <ArrowRight className="transition-transform duration-300 group-hover:translate-x-2" />
+</Link>
+
           </div>
         </div>
       </div>

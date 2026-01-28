@@ -41,7 +41,7 @@ export default function Products() {
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
       const { current } = scrollRef;
-      const scrollAmount = 300; // Adjust scroll amount as needed
+      const scrollAmount = 200; // Adjust scroll amount as needed
       if (direction === "left") {
         current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
       } else {
@@ -66,9 +66,9 @@ export default function Products() {
         <div className='flex flex-col md:flex-row justify-between items-end mb-12'>
           <div className='text-left'>
             <h2 className='font-(family-name:--font-display) text-5xl font-bold text-dark'>
-              Produk <span className='text-brown italic'>Favorit</span> Kami
+              Produk <span className=' text-brown italic'>Favorit</span> Kami
             </h2>
-            <p className='text-brown text-lg mt-4'>
+            <p className='font-serif text-brown text-lg mt-4'>
               Pilihan makanan ringan yang hangat dan lezat (Top 5)
             </p>
           </div>

@@ -16,7 +16,6 @@ export default function Hero() {
         priority
       />
       <div className='absolute inset-0 bg-linear-to-r from-black/60 to-black/30' />
-
       <div className='relative z-10 max-w-3xl px-6 text-white mx-auto lg:mx-0 lg:ml-12'>
         <div className='max-w-2xl space-y-6'>
           <div className='inline-flex items-center gap-2 glass-effect px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-widest'>

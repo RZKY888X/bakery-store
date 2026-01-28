@@ -1,3 +1,6 @@
+// ============================================================================
+// frontend/app/program/page.tsx
+// ============================================================================
 "use client";
 
 import Image from "next/image";
@@ -5,7 +8,7 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-    <main className="w-full bg-[#f3e6d3] text-[#4a2f1f]">
+    <main className="w-full bg-[#f3e6d3] text-[#4a2f1f] font-sans">
       {/* HERO */}
       <section className="relative w-full h-[360px]">
         <Image
@@ -13,11 +16,11 @@ export default function Page() {
           alt="Swadista Hero"
           fill
           priority
-          className="object-cover"
+          className="object-cover brightness-90"
         />
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-center">
-          <h1 className="text-3xl md:text-5xl font-bold text-[#7A4A2E] bg-[#FFF4E6]/90 px-6 py-3 rounded">Swadista Lestari</h1>
+          <h1 className="font-(family-name:--font-display) text-cream text-7xl md:text-8xl font-bold text-shadow">Swadista Lestari</h1>
           <p className="text-sm md:text-base text-[#d9e2c4]">
             Sebuah gerakan kecil dari dapur kami, untuk bumi yang lebih baik.
           </p>
@@ -42,7 +45,7 @@ export default function Page() {
           <p className="mb-4">
             Melalui pilihan bahan, kemasan yang bertanggung jawab, dan kolaborasi lingkungan, kami percaya bahwa perubahan besar selalu dimulai dari langkah kecil.
           </p>
-          <p>Dan langkah itu bisa dimulai dari sepotong roti.</p>
+          <p className="font-display font-bold italic">"Dan langkah itu bisa dimulai dari sepotong roti."</p>
         </div>
       </section>
 
@@ -60,14 +63,14 @@ export default function Page() {
             <div className="w-24 h-24 rounded-full bg-[#d7b08c] flex items-center justify-center mb-4">
               <Image src={item.icon} alt={item.title} width={48} height={48} />
             </div>
-            <p className="text-xs font-semibold tracking-wide">{item.title}</p>
+            <p className="font-display text-xs font-bold tracking-wide">{item.title}</p>
           </div>
         ))}
       </section>
 
       {/* IMPACT */}
       <section className="max-w-6xl mx-auto px-12 text-center pb-24">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-4">Kamu adalah Bagian dari Perubahan</h2>
+        <h2 className="font-display text-2xl md:text-3xl font-semibold mb-4">Kamu adalah Bagian dari Perubahan</h2>
         <p className="text-sm max-w-2xl mx-auto mb-12">
           Setiap pembelian kamu, adalah wujud kepedulian bagi sesama. Kamu tidak hanya menghangatkan diri tapi juga menghangatkan hati orang lain.
         </p>
@@ -80,7 +83,7 @@ export default function Page() {
         </div>
         <Link
           href="#"
-          className="inline-block bg-[#6b3e2e] hover:bg-[#5a3225] transition text-white px-8 py-3 rounded-lg text-sm"
+          className="inline-block bg-[#6b3e2e] hover:bg-[#5a3225] transition text-white px-8 py-3 rounded-lg text-sm font-bold"
         >
           Hubungi Kami
         </Link>

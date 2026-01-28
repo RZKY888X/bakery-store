@@ -28,6 +28,9 @@ export default function Header() {
 
         {/* Nav tengah (Desktop) */}
         <nav className="hidden md:flex gap-8 text-yellow-900 font-serif text-lg font-semibold uppercase tracking-wide mx-auto">
+          <Link href="/" className="hover:text-yellow-700 transition">
+            Home
+          </Link>
           <Link href="/tentang" className="hover:text-yellow-700 transition">
             Tentang
           </Link>
