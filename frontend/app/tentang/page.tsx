@@ -27,7 +27,7 @@ export default function TentangPage() {
           <h2 className="font-display text-3xl font-bold mb-4">Uṣṇa Rasa</h2>
         </div>
 
-        <div className="space-y-4 text-sm md:text-base leading-relaxed">
+        <div className="text-justify space-y-4 text-sm md:text-base leading-relaxed">
           <p>
             Moto Uṣṇa Rasa berasal dari bahasa Sanskerta, di mana Uṣṇa berarti
             hangat, dan Rasa bermakna rasa, pengalaman, serta perasaan.
@@ -52,7 +52,7 @@ export default function TentangPage() {
           <h2 className="font-display text-3xl font-bold">Swadista</h2>
         </div>
 
-        <div className="space-y-4 text-sm md:text-base leading-relaxed">
+        <div className="text-justify space-y-4 text-sm md:text-base leading-relaxed">
           <p>
             Menjadi bakery bercita rasa internasional dengan sentuhan
             tradisional, yang menghadirkan kehangatan rumah dalam setiap

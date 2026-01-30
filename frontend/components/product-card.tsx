@@ -1,28 +1,44 @@
+"use client";
+
 import Image from "next/image";
+import { Plus } from "lucide-react";
+import { useCart } from "@/context/cart-context";
 
 interface ProductCardProps {
-  name: string;
-  category?: string;
-  price: string;
+  id: number;
   image: string;
+  name: string;
+  category: string;
+  price: number;
 }
 
 export default function ProductCard({
-  name,
-  category = "Roti 1",
-  price,
+  id,
   image,
+  name,
+  category,
+  price,
 }: ProductCardProps) {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    addToCart({ id, name, price, image });
+    alert("Produk ditambahkan ke keranjang!");
+  };
+
   return (
     <div className='bg-[#FFF8E7] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col'>
       {/* Image Container */}
       <div className='relative h-64 w-full'>
-        <Image
+        {/* Using standard img for local dev compatibility */}
+        <img
           src={image}
           alt={name}
-          fill
-          className='object-cover transition-transform duration-500 hover:scale-105'
+          className='w-full h-full object-cover transition-transform duration-500 hover:scale-105'
         />
+        <div className='absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-brown'>
+          {category}
+        </div>
       </div>
 
       {/* Content */}
@@ -33,10 +49,13 @@ export default function ProductCard({
         <p className='text-[#8D6E63] text-xs mb-2'>{category}</p>
         <div className='mt-auto flex items-center justify-between'>
           <span className='text-[#5D4037] text-lg font-medium'>
-            Rp. {price}
+             Rp {price.toLocaleString("id-ID")}
           </span>
-          <button className='bg-[#5D4037] text-white text-xs px-4 py-1.5 rounded-md hover:bg-[#4E342E] transition-colors'>
-            Beli
+          <button 
+            onClick={handleAddToCart}
+            className='bg-[#5D4037] text-white text-xs px-4 py-1.5 rounded-md hover:bg-[#4E342E] active:scale-95 active:bg-[#3E2723] transition-all flex items-center gap-2'
+          >
+            <Plus size={14} /> Beli
           </button>
         </div>
       </div>

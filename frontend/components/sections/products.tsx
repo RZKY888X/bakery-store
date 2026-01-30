@@ -1,47 +1,49 @@
 "use client";
 
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { useRef, useEffect, useState } from "react";
+import { ArrowLeft, ArrowRight, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
-import { HiOutlineShoppingCart } from "react-icons/hi";
+import { useCart } from "@/context/cart-context";
+
+interface Product {
+  id: number;
+  name: string;
+  category: string;
+  price: number;
+  image: string;
+}
 
 export default function Products() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [favorites, setFavorites] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { addToCart } = useCart();
 
-  const products = [
-    {
-      name: "Butter Croissant",
-      price: "14.000",
-      image: "/assets/products/buttercroissant.jpeg",
-      badge: true,
-    },
-    {
-      name: "Pain au Chocolat",
-      price: "18.000",
-      image: "/assets/products/painauchocholat.jpeg",
-    },
-    {
-      name: "Cinnamon Roll",
-      price: "13.000",
-      image: "/assets/products/cinnamon.jpeg",
-    },
-    {
-      name: "Almond Croissant",
-      price: "18.000",
-      image: "/assets/products/almond.jpeg",
-    },
-    {
-      name: "Banana Bread",
-      price: "24.000",
-      image: "/assets/products/banana bread.jpeg",
-    },
-  ];
+  const handleAddToCart = (product: Product) => {
+      addToCart(product);
+      alert("Produk Favorit ditambahkan ke keranjang!");
+  };
+
+  useEffect(() => {
+    async function fetchFavorites() {
+      try {
+        const res = await fetch("http://localhost:4000/api/products/favorites");
+        const data = await res.json();
+        setFavorites(data);
+      } catch (error) {
+        console.error("Failed to fetch favorites");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchFavorites();
+  }, []);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
       const { current } = scrollRef;
-      const scrollAmount = 200; // Adjust scroll amount as needed
+      const scrollAmount = 200; 
       if (direction === "left") {
         current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
       } else {
@@ -51,18 +53,28 @@ export default function Products() {
   };
 
   return (
-    <section className='py-24 bg-beige relative overflow-hidden'>
-       {/* Background pattern matching product page for consistency */}
-       <div className="absolute inset-0 opacity-10 pointer-events-none mix-blend-multiply">
-          <Image
-            src="/assets/background-pattern.png"
-            alt="Background Pattern"
-            fill
-            className="object-cover"
-          />
-       </div>
+    <section className='py-20 bg-white relative overflow-hidden'>
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/mainbanner.png"
+          alt="Favorites Background"
+          fill
+          className="object-cover brightness-50"
+        />
+        <div className="absolute inset-0 bg-white/90" /> {/* Light overlay to keep it subtle as requested, or maybe dark? User said "gambar sebagai background". Existing design is light theme. Let's keep it light but with texture. Actually, typically "background image" implies visibility. I'll use a high transparency overlay. */}
+      </div>
 
-      <div className='max-w-7xl mx-auto px-6'>
+      <div 
+        className="absolute inset-0 opacity-[0.05] pointer-events-none z-0"
+        style={{
+          backgroundImage: "url('/assets/background-pattern.png')",
+          backgroundSize: "400px",
+          backgroundRepeat: "repeat"
+        }}
+      />
+      
+      <div className='max-w-7xl mx-auto px-6 relative z-10'>
         <div className='flex flex-col md:flex-row justify-between items-end mb-12'>
           <div className='text-left'>
             <h2 className='font-(family-name:--font-display) text-5xl font-bold text-dark'>
@@ -73,80 +85,99 @@ export default function Products() {
             </p>
           </div>
           
-          {/* Internal Navigation for Carousel */}
-          <div className="flex gap-4 mt-6 md:mt-0">
-             <button 
-                onClick={() => scroll("left")}
-                className="w-12 h-12 rounded-full border border-yellow-800 text-yellow-800 flex items-center justify-center hover:bg-yellow-800 hover:text-white transition"
-             >
-               <ChevronLeft className="w-6 h-6" />
-             </button>
-             <button 
-                onClick={() => scroll("right")}
-                className="w-12 h-12 rounded-full border border-yellow-800 text-yellow-800 flex items-center justify-center hover:bg-yellow-800 hover:text-white transition"
-             >
-               <ChevronRight className="w-6 h-6" />
-             </button>
+          <div className='flex gap-4 mt-6 md:mt-0'>
+            <button
+              onClick={() => scroll("left")}
+              className='w-12 h-12 rounded-full border border-dark/20 flex items-center justify-center hover:bg-dark hover:text-white transition duration-300'
+              aria-label="Scroll left"
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <button
+              onClick={() => scroll("right")}
+              className='w-12 h-12 rounded-full border border-dark/20 flex items-center justify-center hover:bg-dark hover:text-white transition duration-300'
+              aria-label="Scroll right"
+            >
+              <ArrowRight size={20} />
+            </button>
           </div>
         </div>
 
-        {/* Carousel Container */}
-        <div 
-            ref={scrollRef}
-            className='flex gap-8 overflow-x-auto snap-x Snap-mandatory pb-8 scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0'
-            style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
+        {loading ? (
+             <div className="flex justify-center py-20"><span className="text-gray-400">Memuat produk...</span></div>
+        ) : favorites.length === 0 ? (
+             <div className="text-center py-20 text-gray-500">Belum ada produk favorit.</div>
+        ) : (
+        <div
+          ref={scrollRef}
+          className='flex gap-8 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-8 -mx-6 px-6'
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {products.map((p) => (
+          {favorites.map((product) => (
             <div
-              key={p.name}
-              className='min-w-[280px] md:min-w-[350px] bg-cream rounded-[2.5rem] overflow-hidden shadow-lg group snap-center flex-shrink-0'
+              key={product.id}
+              className='min-w-[280px] md:min-w-[320px] snap-start group relative'
             >
-              <div className='relative h-64 w-full'>
-                <Image
-                  src={p.image}
-                  alt={p.name}
-                  fill
-                  className='object-cover group-hover:scale-110 transition duration-500'
-                />
-                {p.badge && (
-                  <span className='absolute top-4 left-4 bg-br-text-brown text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase'>
-                    Best Seller
-                  </span>
-                )}
-              </div>
-              <div className='p-8'>
-                <h5 className='font-display text-brown text-2xl font-bold mb-2'>
-                  {p.name}
-                </h5>
-                <p className='text-brown font-bold text-xl mb-6'>
-                  Rp {p.price}
-                </p>
+              <div className='bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 h-[420px] flex flex-col border border-gray-100'>
+                <div className='relative h-64 overflow-hidden bg-gray-100 flex items-center justify-center'>
+                    <div className='absolute top-4 left-4 z-10 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-brown shadow-sm'>
+                      {product.category || "Bakery"}
+                    </div>
+                  
+                  <div className="relative w-full h-full"> 
+                    <img
+                        src={product.image}
+                        alt={product.name}
+                        className='w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700'
+                    />
+                  </div>
+                  
+                  <div className='absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center'>
+                     <button 
+                         onClick={() => handleAddToCart(product)}
+                         className='bg-white text-dark font-bold px-6 py-3 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg flex items-center gap-2'
+                     >
+                        <ShoppingBag size={18} /> Beli Sekarang
+                     </button>
+                  </div>
+                </div>
 
-                <button className='w-full bg-yellow-800 hover:bg-yellow-900 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 transition'>
-                  <HiOutlineShoppingCart className='w-5 h-5' />
-                  Beli Sekarang
-                </button>
+                <div className='p-6 flex flex-col justify-between flex-1 relative bg-white'>
+                   <div className="absolute top-0 right-0 w-16 h-16 bg-yellow-50 rounded-bl-full -z-0 opacity-50 group-hover:scale-150 transition-transform duration-500 origin-top-right"></div>
+                   
+                  <div className="relative z-10">
+                    <h3 className='font-display text-xl font-bold text-dark mb-2 group-hover:text-brown transition-colors'>
+                      {product.name}
+                    </h3>
+                    <p className='text-gray-500 text-sm line-clamp-2'>
+                      Nikmati kelezatan {product.name} yang dibuat dengan bahan premium.
+                    </p>
+                  </div>
+                  
+                  <div className='flex items-center justify-between mt-4 relative z-10'>
+                    <p className='font-sans font-bold text-xl text-dark'>
+                      Rp {product.price.toLocaleString("id-ID")}
+                    </p>
+                    <button 
+                        onClick={() => handleAddToCart(product)}
+                        className='w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-gold group-hover:text-white transition-colors duration-300'
+                    >
+                        <ShoppingBag size={14} />
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
         </div>
-
-        <div className='text-center mt-12'>
-          <Link
-            href='/produk'
-            className='bg-transparent border-2 border-yellow-800 text-yellow-800 hover:bg-yellow-800 hover:text-white px-8 py-3 rounded-full font-bold inline-flex items-center gap-2 transition group'
-          >
-            Lihat Semua Produk
-            <ArrowRight className='w-4 h-4 transition-transform duration-300 group-hover:translate-x-2' />
-          </Link>
+        )}
+        
+        <div className='mt-12 text-center'>
+            <Link href="/produk" className='inline-block border-b-2 border-dark pb-1 text-dark font-bold hover:text-gold hover:border-gold transition-colors uppercase tracking-widest text-sm'>
+                Lihat Semua Menu
+            </Link>
         </div>
       </div>
-{/* 
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-      `}</style> */}
     </section>
   );
 }

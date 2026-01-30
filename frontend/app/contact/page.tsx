@@ -52,7 +52,7 @@ export default function ContactPage() {
               <h2 className="font-display text-3xl font-bold mb-6 text-[#3E2723]">
                 Informasi Kontak
               </h2>
-              <p className="text-[#3E2723]/90 mb-12 text-lg leading-relaxed">
+              <p className="text-justify text-[#3E2723]/90 mb-12 text-lg leading-relaxed">
                 Jika Anda mempunyai pertanyaan atau kekhawatiran, Anda dapat menghubungi kami dengan mengisi formulir kontak, menelepon kami, datang ke kantor kami, menemukan kami di jejaring sosial lain, atau Anda dapat mengirim email pribadi kepada kami di:
               </p>
 
@@ -69,11 +69,12 @@ export default function ContactPage() {
 
                 <div className="flex items-start gap-4">
                   <MapPin className="w-6 h-6 mt-1 flex-shrink-0" />
-                  <span className="text-lg font-medium leading-relaxed">
+                  <span className="text-justify text-lg font-medium leading-relaxed">
                     Gedung Graha Ganesha, Lantai 1 Suite 120 & 130<br/>
-                    Jl. Hayam Wuruk No. 28, RT 014/ RW 001,<br/>
-                    Kelurahan Kebon Klapa, Kecamatan Gambir,<br/>
-                    Jakarta Pusat, DKI Jakarta
+                    Jl. Bakeri No. 42, Kebayoran Baru, Jakarta Selatan
+ No. 28, RT 014/ RW 001,<br/>
+                    Kecamatan Kebayoran Baru,<br/>
+                    Jakarta Selatan, DKI Jakarta
                   </span>
                 </div>
               </div>
