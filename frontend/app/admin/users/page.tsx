@@ -55,7 +55,7 @@ export default function AdminUsersPage() {
         <div className="text-sm text-gray-500">Total: {users.length} Users</div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden overflow-x-auto">
         <table className="w-full text-sm text-left">
            <thead className="bg-gray-50 text-gray-500 font-medium uppercase text-xs">
               <tr>

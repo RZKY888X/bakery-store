@@ -1,36 +1,62 @@
 "use client";
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
-
-const salesData = [
-  { name: 'Sen', sales: 4000000 },
-  { name: 'Sel', sales: 3000000 },
-  { name: 'Rab', sales: 2000000 },
-  { name: 'Kam', sales: 2780000 },
-  { name: 'Jum', sales: 1890000 },
-  { name: 'Sab', sales: 5390000 },
-  { name: 'Min', sales: 6490000 },
-];
-
-const categoryData = [
-    { name: 'Breads', value: 400 },
-    { name: 'Cakes', value: 300 },
-    { name: 'Pastry', value: 300 },
-    { name: 'Sourdough', value: 200 },
-];
+import { useEffect, useState } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function AdminReportsPage() {
+  const [reportData, setReportData] = useState<any[]>([]);
+  const [filter, setFilter] = useState('weekly');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchReports = async () => {
+        setLoading(true);
+        const token = localStorage.getItem("token");
+        try {
+            const res = await fetch(`http://localhost:4000/api/orders/report?range=${filter}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if(res.ok) {
+                const data = await res.json();
+                setReportData(data.salesData);
+            }
+        } catch(e) {
+            console.error("Failed to fetch reports", e);
+        } finally {
+            setLoading(false);
+        }
+    };
+    fetchReports();
+  }, [filter]);
+
+
   return (
     <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
             <h1 className="font-display text-3xl font-bold text-dark">Laporan Penjualan</h1>
-            <div className="bg-white border border-gray-200 rounded-lg p-1 flex">
-                <button className="px-4 py-1 bg-gold text-dark font-bold text-sm rounded">Mingguan</button>
-                <button className="px-4 py-1 text-gray-500 font-bold text-sm hover:bg-gray-50 rounded">Bulanan</button>
+            <div className="bg-white border border-gray-200 rounded-lg p-1 flex shadow-sm">
+                <button 
+                    onClick={() => setFilter('today')}
+                    className={`px-4 py-1.5 font-bold text-xs rounded transition ${filter === 'today' ? 'bg-gold text-dark shadow-sm' : 'text-gray-500 hover:bg-gray-50'}`}
+                >
+                    Hari Ini
+                </button>
+                <button 
+                    onClick={() => setFilter('weekly')}
+                    className={`px-4 py-1.5 font-bold text-xs rounded transition ${filter === 'weekly' ? 'bg-gold text-dark shadow-sm' : 'text-gray-500 hover:bg-gray-50'}`}
+                >
+                    Mingguan
+                </button>
+                <button 
+                    onClick={() => setFilter('monthly')}
+                    className={`px-4 py-1.5 font-bold text-xs rounded transition ${filter === 'monthly' ? 'bg-gold text-dark shadow-sm' : 'text-gray-500 hover:bg-gray-50'}`}
+                >
+                    Bulanan
+                </button>
             </div>
         </div>
 
-        {/* Summary Cards */}
+        {/* Summary Cards (Static for Demo, could be dynamic too) */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
                 <p className="text-gray-500 text-sm mb-1">Total Pendapatan</p>
@@ -57,35 +83,40 @@ export default function AdminReportsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             {/* Sales Chart */}
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h3 className="font-bold text-lg mb-6">Grafik Penjualan Mingguan</h3>
+                <h3 className="font-bold text-lg mb-6">Grafik Penjualan ({filter === 'today' ? 'Per Jam' : filter === 'weekly' ? 'Per Hari' : 'Per Minggu'})</h3>
                 <div className="h-80 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={salesData}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                            <XAxis 
-                                dataKey="name" 
-                                axisLine={false} 
-                                tickLine={false} 
-                                tick={{fill: '#9CA3AF', fontSize: 12}}
-                                dy={10}
-                            />
-                            <YAxis 
-                                axisLine={false} 
-                                tickLine={false} 
-                                tick={{fill: '#9CA3AF', fontSize: 12}}
-                                tickFormatter={(value) => `${value / 1000000}M`}
-                            />
-                            <Tooltip 
-                                cursor={{fill: 'transparent'}}
-                                contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}}
-                            />
-                            <Bar dataKey="sales" fill="#D68C45" radius={[4, 4, 0, 0]} barSize={40} />
-                        </BarChart>
-                    </ResponsiveContainer>
+                    {loading ? (
+                         <div className="h-full flex items-center justify-center text-gray-400 text-sm">Loading data...</div>
+                    ) : (
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={reportData}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                                <XAxis 
+                                    dataKey="name" 
+                                    axisLine={false} 
+                                    tickLine={false} 
+                                    tick={{fill: '#9CA3AF', fontSize: 12}}
+                                    dy={10}
+                                />
+                                <YAxis 
+                                    axisLine={false} 
+                                    tickLine={false} 
+                                    tick={{fill: '#9CA3AF', fontSize: 12}}
+                                    tickFormatter={(value) => `${value / 1000}k`}
+                                />
+                                <Tooltip 
+                                    cursor={{fill: 'transparent'}}
+                                    contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}}
+                                    formatter={(value: any) => [`Rp ${value.toLocaleString("id-ID")}`, "Sales"]}
+                                />
+                                <Bar dataKey="sales" fill="#D68C45" radius={[4, 4, 0, 0]} barSize={40} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    )}
                 </div>
             </div>
 
-            {/* Popular Products */}
+            {/* Popular Products (Static) */}
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <div className="flex justify-between items-center mb-6">
                     <h3 className="font-bold text-lg">Produk Terlaris</h3>

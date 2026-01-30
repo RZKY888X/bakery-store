@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ShoppingBag, Menu, X, Bell, LayoutDashboard, LogOut, User } from "lucide-react";
+import { ShoppingBag, Menu, X, LayoutDashboard, LogOut, Truck } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
 
@@ -118,55 +118,64 @@ export default function Header() {
                   onClick={() => setNotificationOpen(!notificationOpen)}
                   className="p-2 hover:bg-yellow-200 rounded-full transition relative"
                  >
-                    <Bell className="w-5 h-5 text-yellow-900" />
+                    <Truck className="w-5 h-5 text-yellow-900" />
                     {/* Red Dot if there is a latest order */}
                     {latestOrder && (
                        <span className="absolute top-1.5 right-2 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
                     )}
                  </button>
 
-                 {/* Notification Dropdown */}
+                  {/* Notification Dropdown */}
                  {notificationOpen && latestOrder && (
-                    <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform z-50">
-                       <div className="flex justify-between items-center mb-3">
-                          <h4 className="font-bold text-sm text-yellow-900">Info Pesanan</h4>
-                          <span className="text-[10px] bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-bold">
-                             {latestOrder.status}
-                          </span>
-                       </div>
-                       
-                       <div className="flex gap-3 mb-3">
-                           <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden shrink-0">
-                              {/* Show first item image */}
-                              <img 
-                                src={latestOrder.items?.[0]?.product?.image || '/assets/product-placeholder.png'} 
-                                alt="Product" 
-                                className="w-full h-full object-cover"
-                              />
+                    <>
+                        {/* Mobile Overlay/Backdrop (Optional, helps close on click outside but we have the hook) */}
+                        <div className="fixed inset-0 z-40 bg-black/5 md:hidden" onClick={() => setNotificationOpen(false)}></div>
+                        
+                        <div className="fixed left-4 right-4 top-24 z-50 md:absolute md:left-auto md:right-0 md:top-full md:mt-2 md:w-72 bg-white rounded-xl shadow-xl border border-gray-100 p-4 origin-top-right animate-in fade-in slide-in-from-top-2">
+                           <div className="flex justify-between items-center mb-3">
+                              <h4 className="font-bold text-sm text-yellow-900">Info Pengiriman</h4>
+                              <span className="text-[10px] bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-bold uppercase">
+                                 {latestOrder.status}
+                              </span>
                            </div>
-                           <div className="flex-1">
-                              <p className="text-xs font-bold text-dark line-clamp-1">
-                                 {latestOrder.items?.[0]?.product?.name}
-                                 {latestOrder.items?.length > 1 && ` +${latestOrder.items.length - 1} lainnya`}
-                              </p>
-                              <p className="text-[10px] text-gray-500 mt-0.5">
-                                 Total: Rp {latestOrder.totalAmount?.toLocaleString('id-ID')}
-                              </p>
+                           
+                           <div className="flex gap-3 mb-3">
+                               <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden shrink-0 relative">
+                                  {/* Show first item image */}
+                                  <img 
+                                    src={latestOrder.items?.[0]?.product?.image || '/assets/product-placeholder.png'} 
+                                    onError={(e) => {
+                                        (e.target as HTMLImageElement).src = 'https://placehold.co/100x100?text=Product';
+                                        (e.target as HTMLImageElement).onerror = null;
+                                    }}
+                                    alt="Product" 
+                                    className="w-full h-full object-cover"
+                                  />
+                               </div>
+                               <div className="flex-1 min-w-0">
+                                  <p className="text-xs font-bold text-dark line-clamp-1 truncate">
+                                     {latestOrder.items?.[0]?.product?.name}
+                                     {latestOrder.items?.length > 1 && ` +${latestOrder.items.length - 1} lainnya`}
+                                  </p>
+                                  <p className="text-[10px] text-gray-500 mt-0.5">
+                                     Total: Rp {latestOrder.totalAmount?.toLocaleString('id-ID')}
+                                  </p>
+                               </div>
                            </div>
-                       </div>
-
-                       <Link 
-                          href="/orders" 
-                          onClick={() => setNotificationOpen(false)}
-                          className="block text-center text-xs font-bold text-gold hover:text-yellow-600 hover:underline transition"
-                       >
-                          Lihat Detail
-                       </Link>
-                    </div>
+    
+                           <Link 
+                              href="/orders" 
+                              onClick={() => setNotificationOpen(false)}
+                              className="block text-center text-xs font-bold text-gold hover:text-yellow-600 hover:underline transition"
+                           >
+                              Lacak Pesanan
+                           </Link>
+                        </div>
+                    </>
                  )}
                   {notificationOpen && !latestOrder && (
-                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 p-4 z-50 text-center">
-                        <p className="text-xs text-gray-500">Belum ada notifikasi pesanan.</p>
+                     <div className="absolute right-0 mt-2 w-48 max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-xl border border-gray-100 p-4 z-50 text-center">
+                        <p className="text-xs text-gray-500">Belum ada pengiriman aktif.</p>
                      </div>
                   )}
               </div>

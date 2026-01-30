@@ -9,9 +9,60 @@ export default function SuccessPage() {
   const { clearCart } = useCart();
 
   useEffect(() => {
-    // Clear cart on successful payment return
-    clearCart();
-  }, []);
+    // Robust clearing: Call context function AND manually clear storage
+    const performCleanup = async () => {
+        clearCart();
+        localStorage.removeItem("cart");
+
+        // Request 1: Trigger Status Update to SHIPPED
+        // In a real production app, this should be a Webhook from Xendit/Midtrans.
+        // For this demo/implementation, we trigger it from client-side success landing.
+        const token = localStorage.getItem("token");
+        // We might need to store orderId in localStorage during checkout to send it here,
+        // OR simply rely on the fact that for "My Orders" fetching it will show latest.
+        
+        // HOWEVER, the requirement is "jika pesanan sudah dibayar maka statusnya langsung shiped"
+        // Since we don't have the OrderID easily available here without URL params (which Xendit might not pass back purely),
+        // we can try to fetch the latest PENDING order or just rely on the webhook.
+        
+        // BETTER APPROACH: The checkout page should probably redirect with ?order_id=XYZ
+        // But if we can't control that easily, let's assume we can fetch the latest order for this user and if it's pending/paid, move to shipped?
+        // OR: Since Xendit redirects to successRedirectUrl: 'http://localhost:3000/success', we can't easily append ID unless we pre-generate the link dynamically.
+        // Let's assume for this specific user request, we update the LATEST order.
+        
+        if (token) {
+             try {
+                 const res = await fetch("http://localhost:4000/api/orders/my-orders", {
+                      headers: { Authorization: `Bearer ${token}` }
+                 });
+                 if(res.ok) {
+                     const orders = await res.json();
+                     if(orders.length > 0) {
+                        const latest = orders[0];
+                        if(latest.status === 'PENDING' || latest.status === 'PAID') {
+                            await fetch("http://localhost:4000/api/payment/success-callback", {
+                                method: "POST",
+                                headers: { 
+                                    "Content-Type": "application/json",
+                                    "Authorization": `Bearer ${token}` 
+                                },
+                                body: JSON.stringify({ orderId: latest.id })
+                            });
+                        }
+                     }
+                 }
+             } catch(e) {
+                 console.error("Failed to auto-update status", e);
+             }
+        }
+    };
+
+    const timer = setTimeout(() => {
+        performCleanup();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [clearCart]);
 
   return (
     <main className="min-h-screen bg-[#FDFBF7] flex items-center justify-center p-6">

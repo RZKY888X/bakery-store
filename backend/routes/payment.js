@@ -73,4 +73,23 @@ router.post('/xendit', authMiddleware, async (req, res) => {
     }
 });
 
+// Endpoint to Simulate Success Callback / Webhook (Simplified for Demo)
+router.post('/success-callback', authMiddleware, async (req, res) => {
+    try {
+        const { orderId } = req.body;
+        
+        // Update order status to PROCESSED immediately upon payment success
+        // This indicates the order is paid and currently being processed/prepared
+        const order = await prisma.order.update({
+            where: { id: parseInt(orderId) },
+            data: { status: 'PROCESSED' } 
+        });
+
+        res.json({ message: 'Order status updated to PROCESSED', order });
+    } catch (error) {
+        console.error("Callback Error:", error);
+        res.status(500).json({ message: 'Failed to update order status' });
+    }
+});
+
 module.exports = router;

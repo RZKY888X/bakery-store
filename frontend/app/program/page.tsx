@@ -38,7 +38,7 @@ export default function Page() {
             className="object-cover"
           />
         </div>
-        <div className="text-sm leading-relaxed">
+        <div className="font-(family-name:--font-display) text-justify text-md md:text-lg leading-relaxed">
           <p className="mb-4">
             Swadista Lestari adalah komitmen kami untuk membuat roti dengan kesadaran—akan alam, proses, dan masa depan.
           </p>
@@ -63,7 +63,7 @@ export default function Page() {
             <div className="w-24 h-24 rounded-full bg-[#d7b08c] flex items-center justify-center mb-4">
               <Image src={item.icon} alt={item.title} width={48} height={48} />
             </div>
-            <p className="font-display text-xs font-bold tracking-wide">{item.title}</p>
+            <p className="font-display text-xs md:text-sm font-bold tracking-wide">{item.title}</p>
           </div>
         ))}
       </section>

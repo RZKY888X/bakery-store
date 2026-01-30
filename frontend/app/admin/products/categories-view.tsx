@@ -72,7 +72,7 @@ export default function CategoriesView() {
       <h3 className="font-bold text-xl mb-6">Manajemen Kategori</h3>
       
       <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm mb-8">
-         <form onSubmit={handleAdd} className="flex gap-4">
+         <form onSubmit={handleAdd} className="flex flex-col sm:flex-row gap-4">
             <input 
                type="text" 
                placeholder="Nama Kategori Baru..."
@@ -82,7 +82,7 @@ export default function CategoriesView() {
             />
             <button 
                type="submit"
-               className="bg-gold text-dark font-bold px-6 py-2 rounded-lg hover:bg-yellow-500 transition flex items-center gap-2"
+               className="bg-gold text-dark font-bold px-6 py-2 rounded-lg hover:bg-yellow-500 transition flex items-center justify-center gap-2 sm:w-auto w-full"
             >
                <Plus size={18} /> Tambah
             </button>
