@@ -41,7 +41,6 @@ export default function CheckoutPage() {
 
     setLoading(true);
     try {
-      // 1. Buat Invoice Xendit di Backend
       const token = localStorage.getItem("token");
       if (!token) {
           alert("Silakan login terlebih dahulu untuk melanjutkan pembayaran.");
@@ -50,33 +49,40 @@ export default function CheckoutPage() {
           return;
       }
 
-      const res = await fetch("http://localhost:4000/api/payment/xendit", {
+      // Create order directly without payment gateway
+      const res = await fetch("http://localhost:4000/api/orders", {
         method: "POST",
         headers: { 
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}` 
         },
         body: JSON.stringify({
-          items: items,
-          total: total,
-          customer: formData,
-          externalId: `ORDER-${Date.now()}`
+          items: items.map(item => ({
+            productId: item.id,
+            quantity: item.quantity,
+            price: item.price
+          })),
+          totalAmount: total,
+          shippingAddress: formData.address,
+          customerInfo: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            phone: formData.phone,
+            lat: formData.lat,
+            lng: formData.lng
+          }
         }),
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Gagal membuat invoice");
+      if (!res.ok) throw new Error(data.message || "Gagal membuat pesanan");
 
-      // 2. Redirect ke Halaman Pembayaran Xendit
-      if (data.invoiceUrl) {
-          console.log("Redirecting to Xendit:", data.invoiceUrl);
-          window.location.href = data.invoiceUrl;
-      } else {
-          throw new Error("Invoice URL tidak ditemukan");
-      }
+      // Clear cart and redirect to success page
+      clearCart();
+      router.push("/success");
 
     } catch (error: any) {
-      console.error("Payment Error:", error);
+      console.error("Order Error:", error);
       alert(`Gagal: ${error.message}`);
       setLoading(false);
     }
@@ -199,15 +205,14 @@ export default function CheckoutPage() {
                  <h3 className="flex items-center gap-2 font-display text-xl font-bold mb-6">
                    <span className="text-gold">💳</span> Metode Pembayaran
                 </h3>
-                 <div className="p-6 bg-blue-50 border border-blue-200 rounded-xl text-center">
-                    <p className="font-bold text-blue-800 mb-2">🛡️ Pembayaran Aman Xendit</p>
-                    <p className="text-sm text-blue-600">Anda akan diarahkan ke halaman pembayaran Xendit untuk menyelesaikan transaksi (VA, QRIS, Retail, E-Wallet).</p>
+                 <div className="p-6 bg-green-50 border border-green-200 rounded-xl text-center">
+                    <p className="font-bold text-green-800 mb-2">✓ Transfer Bank / COD</p>
+                    <p className="text-sm text-green-600">Pembayaran dapat dilakukan melalui transfer bank atau bayar langsung saat barang diterima.</p>
                     <div className="flex justify-center gap-4 mt-4 opacity-70">
-                        {/* Logos placeholder using text for simplicity */}
                         <span className="font-bold text-gray-500">BCA</span>
                         <span className="font-bold text-gray-500">MANDIRI</span>
-                        <span className="font-bold text-gray-500">GOPAY</span>
-                        <span className="font-bold text-gray-500">QRIS</span>
+                        <span className="font-bold text-gray-500">BRI</span>
+                        <span className="font-bold text-gray-500">COD</span>
                     </div>
                  </div>
               </section>
@@ -266,7 +271,7 @@ export default function CheckoutPage() {
                     disabled={loading}
                     className="w-full bg-gold hover:bg-yellow-500 text-dark font-bold py-4 rounded-lg transition shadow-lg disabled:opacity-70"
                   >
-                    {loading ? "Memproses..." : "Bayar Sekarang"}
+                    {loading ? "Memproses..." : "Pesan Sekarang"}
                   </button>
                   
                   <p className="text-[10px] text-center text-gray-400 mt-4 leading-relaxed">

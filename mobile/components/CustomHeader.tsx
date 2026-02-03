@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, SafeAreaView, Dimensions } from 'react-native';
-import { ShoppingBag, Menu, X, ArrowLeft, LayoutDashboard, Info, Phone, Calendar } from 'lucide-react-native';
+import { ShoppingBag, Menu, X, ArrowLeft, LayoutDashboard, Info, Phone, Calendar, User, LogOut } from 'lucide-react-native';
 import Colors from '@/constants/Colors';
 import { useRouter } from 'expo-router';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -16,6 +17,7 @@ export default function CustomHeader({ showBack, title }: CustomHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
   const { totalItems } = useCart();
+  const { user, signOut } = useAuth();
 
   const handleBack = () => {
     if (router.canGoBack()) {
@@ -29,6 +31,12 @@ export default function CustomHeader({ showBack, title }: CustomHeaderProps) {
     setMenuOpen(false);
     // @ts-ignore
     router.push(path);
+  };
+
+  const handleLogout = async () => {
+    setMenuOpen(false);
+    await signOut();
+    router.replace('/(tabs)');
   };
 
   return (
@@ -49,10 +57,6 @@ export default function CustomHeader({ showBack, title }: CustomHeaderProps) {
             </View>
           )}
         </View>
-
-
-
-// ... inside render ...
 
         {/* Right: Cart & Menu */}
         <View style={styles.rightContainer}>
@@ -84,6 +88,19 @@ export default function CustomHeader({ showBack, title }: CustomHeaderProps) {
                  </TouchableOpacity>
               </View>
               
+              {/* User Profile Section - Show when logged in */}
+              {user && (
+                <View style={styles.userSection}>
+                   <View style={styles.userAvatar}>
+                      <Text style={styles.userAvatarText}>{user.name.charAt(0).toUpperCase()}</Text>
+                   </View>
+                   <View style={styles.userInfo}>
+                      <Text style={styles.userName}>{user.name}</Text>
+                      <Text style={styles.userEmail}>{user.email}</Text>
+                   </View>
+                </View>
+              )}
+              
               <View style={styles.menuItems}>
                  <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('/(tabs)')}>
                     <Text style={styles.menuText}>Beranda</Text>
@@ -107,10 +124,24 @@ export default function CustomHeader({ showBack, title }: CustomHeaderProps) {
                  
                  <View style={styles.divider} />
                  
-                 <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('/login')}>
-                    <LayoutDashboard size={18} color={Colors.light.secondary} style={{marginRight: 10}} />
-                    <Text style={[styles.menuText, {color: Colors.light.secondary}]}>Login</Text>
-                 </TouchableOpacity>
+                 {/* Show Login or Logout based on auth state */}
+                 {user ? (
+                   <>
+                     <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('/(tabs)/orders')}>
+                        <ShoppingBag size={18} color={Colors.light.secondary} style={{marginRight: 10}} />
+                        <Text style={[styles.menuText, {color: Colors.light.secondary}]}>Pesanan Saya</Text>
+                     </TouchableOpacity>
+                     <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
+                        <LogOut size={18} color="#EF4444" style={{marginRight: 10}} />
+                        <Text style={[styles.menuText, {color: '#EF4444'}]}>Keluar</Text>
+                     </TouchableOpacity>
+                   </>
+                 ) : (
+                   <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('/login')}>
+                      <User size={18} color={Colors.light.secondary} style={{marginRight: 10}} />
+                      <Text style={[styles.menuText, {color: Colors.light.secondary}]}>Login</Text>
+                   </TouchableOpacity>
+                 )}
               </View>
            </View>
         </TouchableOpacity>
@@ -229,5 +260,43 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#eee',
     marginVertical: 8,
-  } 
+  },
+  userSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FDFBF7',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#EBD5B3',
+  },
+  userAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#8B5E3C',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  userAvatarText: {
+    color: '#fff',
+    fontSize: 20,
+    fontFamily: 'PlayfairDisplay_700Bold',
+  },
+  userInfo: {
+    flex: 1,
+  },
+  userName: {
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans_700Bold',
+    color: '#333',
+  },
+  userEmail: {
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans_400Regular',
+    color: '#888',
+    marginTop: 2,
+  },
 });

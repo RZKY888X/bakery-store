@@ -46,122 +46,140 @@ export default function AdminDashboard() {
 
   return (
     <>
-       <div className="mb-8 flex justify-between items-end">
+       <div className="mb-10 flex flex-col md:flex-row justify-between items-end gap-4">
           <div>
-              <p className="text-gray-500 font-medium text-sm mb-1">Selamat Datang Kembali,</p>
-              <h2 className="font-display text-3xl font-bold text-dark">Dashboard Overview</h2>
+              <p className="text-gray-400 font-medium text-sm mb-1">{
+                  new Date().getHours() < 12 ? "Selamat Pagi," : 
+                  new Date().getHours() < 15 ? "Selamat Siang," : 
+                  new Date().getHours() < 18 ? "Selamat Sore," : "Selamat Malam,"
+              }</p>
+              <h2 className="font-display text-4xl font-bold text-white">Dashboard Overview</h2>
           </div>
           <div className="text-right hidden md:block">
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest px-4 py-2 bg-[#1A1A1A] rounded-full border border-white/5 shadow-sm">
+                  {new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+              </p>
           </div>
        </div>
 
        {/* Stats Grid */}
-       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Revenue Card */}
-          <div className="bg-gradient-to-br from-white to-orange-50/50 p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition card-hover-effect">
-             <div className="flex justify-between items-start mb-6">
-                <div className="p-3 bg-gradient-to-br from-orange-100 to-orange-200 text-orange-600 rounded-xl shadow-inner">
+          <div className="relative overflow-hidden bg-[#1A1A1A] p-6 rounded-3xl border border-white/5 shadow-xl shadow-black/20 group hover:-translate-y-1 transition-all duration-300">
+             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <DollarSign size={80} className="text-gold" />
+             </div>
+             <div className="flex justify-between items-start mb-6 relative z-10">
+                <div className="p-3 bg-[#252525] text-gold rounded-2xl shadow-inner border border-white/5">
                     <DollarSign size={24} />
                 </div>
-                <div className="px-2 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-full flex items-center gap-1">
+                <div className="px-3 py-1 bg-green-500/10 text-green-400 text-[10px] font-bold rounded-full flex items-center gap-1 border border-green-500/20">
                     <TrendingUp size={12} /> +12.5%
                 </div>
              </div>
-             <div>
-                <p className="text-gray-500 text-sm font-medium mb-1">Total Pendapatan</p>
-                <h3 className="text-3xl font-bold text-dark tracking-tight">Rp {stats?.revenue?.toLocaleString('id-ID')}</h3>
+             <div className="relative z-10">
+                <p className="text-gray-500 text-sm font-bold mb-1 uppercase tracking-wide">Total Pendapatan</p>
+                <h3 className="text-3xl font-display font-bold text-white tracking-tight">Rp {stats?.revenue?.toLocaleString('id-ID')}</h3>
              </div>
           </div>
 
            {/* Active Orders Card */}
-           <div className="bg-gradient-to-br from-white to-blue-50/50 p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition card-hover-effect">
-             <div className="flex justify-between items-start mb-6">
-                <div className="p-3 bg-gradient-to-br from-blue-100 to-blue-200 text-blue-600 rounded-xl shadow-inner">
+           <div className="relative overflow-hidden bg-[#1A1A1A] p-6 rounded-3xl border border-white/5 shadow-xl shadow-black/20 group hover:-translate-y-1 transition-all duration-300">
+             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <Package size={80} className="text-blue-500" />
+             </div>
+             <div className="flex justify-between items-start mb-6 relative z-10">
+                <div className="p-3 bg-[#252525] text-blue-500 rounded-2xl shadow-inner border border-white/5">
                     <ShoppingCart size={24} />
                 </div>
-                <div className="px-2 py-1 bg-blue-100 text-blue-700 text-[10px] font-bold rounded-full">
+                <div className="px-3 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded-full border border-blue-500/20">
                     Active
                 </div>
              </div>
-             <div>
-                <p className="text-gray-500 text-sm font-medium mb-1">Pesanan Aktif</p>
+             <div className="relative z-10">
+                <p className="text-gray-500 text-sm font-bold mb-1 uppercase tracking-wide">Pesanan Aktif</p>
                 <div className="flex items-baseline gap-2">
-                    <h3 className="text-3xl font-bold text-dark tracking-tight">{stats?.activeOrders}</h3>
-                    <span className="text-xs text-blue-500 font-bold">Perlu tindakan</span>
+                    <h3 className="text-3xl font-display font-bold text-white tracking-tight">{stats?.activeOrders}</h3>
+                    <span className="text-xs text-start text-gray-500 font-medium">Sedang diproses</span>
                 </div>
              </div>
           </div>
 
            {/* Total Users Card */}
-           <div className="bg-gradient-to-br from-white to-purple-50/50 p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition card-hover-effect">
-             <div className="flex justify-between items-start mb-6">
-                <div className="p-3 bg-gradient-to-br from-purple-100 to-purple-200 text-purple-600 rounded-xl shadow-inner">
+           <div className="relative overflow-hidden bg-[#1A1A1A] p-6 rounded-3xl border border-white/5 shadow-xl shadow-black/20 group hover:-translate-y-1 transition-all duration-300">
+             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <Users size={80} className="text-purple-500" />
+             </div>
+             <div className="flex justify-between items-start mb-6 relative z-10">
+                <div className="p-3 bg-[#252525] text-purple-500 rounded-2xl shadow-inner border border-white/5">
                     <Users size={24} />
                 </div>
              </div>
-             <div>
-                <p className="text-gray-500 text-sm font-medium mb-1">Total Pelanggan</p>
-                <h3 className="text-3xl font-bold text-dark tracking-tight">{stats?.users}</h3>
+             <div className="relative z-10">
+                <p className="text-gray-500 text-sm font-bold mb-1 uppercase tracking-wide">Total Pelanggan</p>
+                <h3 className="text-3xl font-display font-bold text-white tracking-tight">{stats?.users}</h3>
              </div>
           </div>
        </div>
 
        <div className="grid lg:grid-cols-3 gap-8">
           {/* Recent Orders */}
-          <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-             <div className="p-6 border-b border-gray-50 flex justify-between items-center bg-gray-50/30">
-                <h3 className="font-bold text-lg flex items-center gap-2">
-                    <Package className="text-gold" size={20} />
+          <div className="lg:col-span-2 bg-[#1A1A1A] rounded-3xl border border-white/5 shadow-lg overflow-hidden flex flex-col">
+             <div className="p-8 border-b border-white/5 flex justify-between items-center bg-[#202020]">
+                <h3 className="font-bold text-xl flex items-center gap-3 text-white">
+                    <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold">
+                        <Package size={16} />
+                    </div>
                     Pesanan Terbaru
                 </h3>
-                <Link href="/admin/orders" className="text-xs font-bold text-gold hover:text-yellow-600 flex items-center gap-1 group">
+                <Link href="/admin/orders" className="text-xs font-bold text-gray-500 hover:text-gold flex items-center gap-1 group transition">
                     Lihat Semua <ArrowRight size={14} className="group-hover:translate-x-1 transition" />
                 </Link>
              </div>
              <div className="p-0 overflow-x-auto">
                 <table className="w-full text-sm text-left">
-                   <thead className="bg-gray-50 text-gray-500 font-bold uppercase text-[10px] tracking-wider">
+                   <thead className="bg-[#1A1A1A] text-gray-500 font-bold uppercase text-[10px] tracking-widest border-b border-white/5">
                       <tr>
-                         <th className="px-6 py-4">Order ID</th>
-                         <th className="px-6 py-4">Customer</th>
-                         <th className="px-6 py-4">Status</th>
-                         <th className="px-6 py-4 text-right">Total</th>
+                         <th className="px-8 py-5">Order ID</th>
+                         <th className="px-8 py-5">Customer</th>
+                         <th className="px-8 py-5">Status</th>
+                         <th className="px-8 py-5 text-right">Total</th>
                       </tr>
                    </thead>
-                   <tbody className="divide-y divide-gray-50">
+                   <tbody className="divide-y divide-white/5">
                       {stats?.recentOrders?.map((order: any, i: number) => (
-                         <tr key={i} className="hover:bg-yellow-50/50 transition cursor-pointer group">
-                            <td className="px-6 py-4 font-bold text-dark group-hover:text-gold transition">
-                                #{order.id}
-                                <span className="block text-[10px] text-gray-400 font-normal mt-0.5">
+                         <tr key={i} className="hover:bg-white/5 transition cursor-pointer group">
+                            <td className="px-8 py-5 font-bold text-white group-hover:text-gold transition">
+                                <span className="font-mono text-xs text-gray-500">#{order.id}</span>
+                                <span className="block text-[10px] text-gray-600 font-normal mt-1">
                                     {new Date(order.createdAt).toLocaleDateString()}
                                 </span>
                             </td>
-                            <td className="px-6 py-4 text-gray-600 font-medium">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-bold text-gray-500">
+                            <td className="px-8 py-5 text-gray-300 font-medium">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-[#252525] flex items-center justify-center text-[10px] font-bold text-gray-500 shadow-sm border border-white/5">
                                         {order.user?.name?.charAt(0) || 'U'}
                                     </div>
-                                    {order.user?.name || 'Guest'}
+                                    <span className="font-bold text-white">{order.user?.name || 'Guest'}</span>
                                 </div>
                             </td>
-                            <td className="px-6 py-4">
-                               <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border
-                                  ${order.status === "PENDING" ? "bg-yellow-50 text-yellow-700 border-yellow-200" : 
-                                    order.status === "SHIPPED" ? "bg-blue-50 text-blue-700 border-blue-200" :
-                                    order.status === "COMPLETED" ? "bg-green-50 text-green-700 border-green-200" :
-                                    "bg-gray-50 text-gray-600 border-gray-200"}`}>
+                            <td className="px-8 py-5">
+                               <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border shadow-sm
+                                  ${order.status === "PENDING" ? "bg-yellow-500/10 text-yellow-500 border-yellow-500/20" : 
+                                    order.status === "PROCESSED" ? "bg-indigo-500/10 text-indigo-400 border-indigo-500/20" :
+                                    order.status === "SHIPPED" ? "bg-blue-500/10 text-blue-400 border-blue-500/20" :
+                                    order.status === "COMPLETED" ? "bg-green-500/10 text-green-400 border-green-500/20" :
+                                    "bg-gray-500/10 text-gray-400 border-gray-500/20"}`}>
                                   {order.status}
                                </span>
                             </td>
-                            <td className="px-6 py-4 font-bold text-dark text-right">
+                            <td className="px-8 py-5 font-bold text-white text-right">
                                 Rp {order.totalAmount?.toLocaleString('id-ID')}
                             </td>
                          </tr>
                       ))}
                       {(!stats?.recentOrders || stats.recentOrders.length === 0) && (
-                          <tr><td colSpan={4} className="p-8 text-center text-gray-400">Belum ada pesanan</td></tr>
+                          <tr><td colSpan={4} className="p-10 text-center text-gray-600">Belum ada pesanan terbaru.</td></tr>
                       )}
                    </tbody>
                 </table>
@@ -170,37 +188,37 @@ export default function AdminDashboard() {
 
           {/* Quick Actions / Insights */}
           <div className="lg:col-span-1 space-y-6">
-             <div className="bg-gradient-to-br from-[#1e1e1e] to-[#2a2a2a] rounded-2xl shadow-xl p-6 text-white relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gold/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2 group-hover:bg-gold/20 transition duration-700"></div>
+             <div className="bg-[#1A1A1A] rounded-3xl shadow-xl p-8 text-white relative overflow-hidden group border border-white/5">
+                <div className="absolute -top-10 -right-10 w-48 h-48 bg-gold/10 rounded-full blur-3xl group-hover:bg-gold/20 transition duration-700"></div>
                 
-                <div className="relative z-10">
-                   <div className="w-10 h-10 bg-white/10 rounded-xl mb-4 flex items-center justify-center backdrop-blur-sm">
-                        <TrendingUp size={20} className="text-gold" />
+                <div className="relative z-10 text-center">
+                   <div className="w-14 h-14 mx-auto bg-white/5 rounded-2xl mb-6 flex items-center justify-center backdrop-blur-md border border-white/10 shadow-lg">
+                        <TrendingUp size={28} className="text-gold" />
                    </div>
-                   <h3 className="font-bold text-lg mb-2">Performance Insight</h3>
-                   <p className="text-xs text-gray-400 leading-relaxed mb-6">
-                      Penjualan kategori <strong>Bakery</strong> mendominasi 45% transaksi minggu ini. Stock management disarankan untuk flour dan butter.
+                   <h3 className="font-display font-bold text-2xl mb-2 text-white">Insight Mingguan</h3>
+                   <p className="text-sm text-gray-400 leading-relaxed mb-8">
+                      Penjualan kategori <span className="text-white font-bold">Bakery</span> mendominasi 45% transaksi.
                    </p>
-                   <Link href="/admin/reports" className="inline-flex items-center justify-center w-full py-3 bg-gold hover:bg-yellow-500 text-dark font-bold text-sm rounded-xl transition shadow-lg shadow-gold/20">
+                   <Link href="/admin/reports" className="inline-flex w-full items-center justify-center py-3.5 bg-gold hover:bg-yellow-500 text-dark font-bold text-sm rounded-xl transition shadow-lg shadow-gold/20 transform hover:-translate-y-0.5">
                       Lihat Laporan Lengkap
                    </Link>
                 </div>
              </div>
 
-             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                 <h3 className="font-bold text-sm text-gray-500 uppercase tracking-widest mb-4">Aksi Cepat</h3>
+             <div className="bg-[#1A1A1A] rounded-3xl border border-white/5 shadow-sm p-6">
+                 <h3 className="font-bold text-xs text-gray-500 uppercase tracking-widest mb-6 px-2">Aksi Cepat</h3>
                  <div className="space-y-3">
-                     <Link href="/admin/products/new" className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl transition text-sm font-medium text-gray-700 group">
-                        <div className="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center group-hover:scale-110 transition">
-                            <Package size={16} />
+                     <Link href="/admin/products" className="flex items-center gap-4 p-4 hover:bg-white/5 rounded-2xl transition text-sm font-bold text-white group border border-transparent hover:border-white/5">
+                        <div className="w-10 h-10 rounded-xl bg-green-500/10 text-green-500 flex items-center justify-center group-hover:scale-110 transition shadow-sm border border-green-500/20">
+                            <Package size={20} />
                         </div>
                         Tambah Produk Baru
                      </Link>
-                     <Link href="/admin/reports" className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl transition text-sm font-medium text-gray-700 group">
-                        <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 transition">
-                            <Users size={16} />
+                     <Link href="/admin/users" className="flex items-center gap-4 p-4 hover:bg-white/5 rounded-2xl transition text-sm font-bold text-white group border border-transparent hover:border-white/5">
+                        <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center group-hover:scale-110 transition shadow-sm border border-blue-500/20">
+                            <Users size={20} />
                         </div>
-                        Analisis Pelanggan
+                        Kelola Pelanggan
                      </Link>
                  </div>
              </div>

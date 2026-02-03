@@ -8,13 +8,15 @@ const prisma = new PrismaClient();
 // Create Order (Checkout)
 router.post('/', authMiddleware, async (req, res) => {
   try {
-    const { items, totalAmount } = req.body; // items: [{ productId, quantity, price }]
+    const { items, totalAmount, shippingAddress, paymentMethod } = req.body; // items: [{ productId, quantity, price }]
 
     // Transaction to create order and order items
     const order = await prisma.order.create({
       data: {
         userId: req.user.id,
         totalAmount: parseFloat(totalAmount),
+        shippingAddress,
+        paymentMethod: paymentMethod || 'Transfer Bank',
         status: 'PENDING',
         items: {
           create: items.map(item => ({

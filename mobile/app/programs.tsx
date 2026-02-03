@@ -10,7 +10,7 @@ export default function ProgramsScreen() {
         
         <View style={styles.programCard}>
            <Image 
-             source={{ uri: 'https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=1000&auto=format&fit=crop' }}
+             source={require('@/assets/images/programs/program1.png')}
              style={styles.cardImage}
            />
            <View style={styles.cardContent}>
@@ -23,7 +23,7 @@ export default function ProgramsScreen() {
 
         <View style={styles.programCard}>
            <Image 
-             source={{ uri: 'https://images.unsplash.com/photo-1607082350899-7e105aa886ae?q=80&w=1000&auto=format&fit=crop' }}
+             source={require('@/assets/images/programs/program2.png')}
              style={styles.cardImage}
            />
            <View style={styles.cardContent}>
@@ -36,13 +36,26 @@ export default function ProgramsScreen() {
 
         <View style={styles.programCard}>
            <Image 
-             source={{ uri: 'https://images.unsplash.com/photo-1517433367423-c7e5b0f35086?q=80&w=1000&auto=format&fit=crop' }}
+             source={require('@/assets/images/programs/program3.png')}
              style={styles.cardImage}
            />
            <View style={styles.cardContent}>
              <Text style={styles.cardTitle}>Workshop Baking</Text>
              <Text style={styles.cardDesc}>
                Ingin belajar membuat roti artisan sendiri? Ikuti kelas baking bulanan kami bersama chef berpengalaman.
+             </Text>
+           </View>
+        </View>
+
+        <View style={styles.programCard}>
+           <Image 
+             source={require('@/assets/images/programs/program4.png')}
+             style={styles.cardImage}
+           />
+           <View style={styles.cardContent}>
+             <Text style={styles.cardTitle}>Special Order</Text>
+             <Text style={styles.cardDesc}>
+               Pesan roti khusus untuk acara spesial Anda. Kami siap membantu mewujudkan pesanan custom sesuai keinginan.
              </Text>
            </View>
         </View>

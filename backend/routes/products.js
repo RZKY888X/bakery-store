@@ -47,20 +47,25 @@ router.get('/:id', async (req, res) => {
 router.post('/', [authMiddleware, adminMiddleware], async (req, res) => {
   try {
     const { name, description, price, image, category, isFavorite } = req.body;
+    
+    if (!name || !price) {
+      return res.status(400).json({ message: 'Name and price are required' });
+    }
+
     const product = await prisma.product.create({
       data: {
         name,
-        description,
+        description: description || name,
         price: parseFloat(price),
-        image,
-        category,
+        image: image || '/placeholder.jpg', // Default placeholder if no image
+        category: category || 'Uncategorized',
         isFavorite: isFavorite || false,
       },
     });
     res.status(201).json(product);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error creating product' });
+    console.error("Create product error:", error);
+    res.status(500).json({ message: 'Server error creating product: ' + error.message });
   }
 });
 

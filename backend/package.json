@@ -19,6 +19,7 @@
     "jsonwebtoken": "^9.0.3",
     "midtrans-client": "^1.4.3",
     "multer": "^2.0.2",
+    "node-fetch": "^2.7.0",
     "prisma": "^5.10.2",
     "xendit-node": "^7.0.0"
   }

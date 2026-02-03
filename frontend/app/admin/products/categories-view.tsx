@@ -69,52 +69,52 @@ export default function CategoriesView() {
 
   return (
     <div className="max-w-2xl">
-      <h3 className="font-bold text-xl mb-6">Manajemen Kategori</h3>
+      <h3 className="font-display font-bold text-xl mb-6 text-white">Manajemen Kategori</h3>
       
-      <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm mb-8">
+      <div className="bg-[#1A1A1A] p-6 rounded-3xl border border-white/5 shadow-lg mb-8">
          <form onSubmit={handleAdd} className="flex flex-col sm:flex-row gap-4">
             <input 
                type="text" 
                placeholder="Nama Kategori Baru..."
-               className="flex-1 border border-gray-200 rounded-lg px-4 py-2 outline-none focus:border-gold"
+               className="flex-1 border border-white/10 bg-[#202020] text-white rounded-xl px-4 py-3 outline-none focus:border-gold transition"
                value={newCategory}
                onChange={(e) => setNewCategory(e.target.value)}
             />
             <button 
                type="submit"
-               className="bg-gold text-dark font-bold px-6 py-2 rounded-lg hover:bg-yellow-500 transition flex items-center justify-center gap-2 sm:w-auto w-full"
+               className="bg-gold text-dark font-bold px-8 py-3 rounded-xl hover:bg-yellow-500 transition flex items-center justify-center gap-2 sm:w-auto w-full shadow-lg shadow-gold/20"
             >
                <Plus size={18} /> Tambah
             </button>
          </form>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-[#1A1A1A] rounded-3xl border border-white/5 shadow-lg overflow-hidden">
          <table className="w-full text-left">
-            <thead className="bg-gray-50 text-gray-500 text-xs uppercase font-bold">
+            <thead className="bg-[#202020] text-gray-500 text-[10px] uppercase font-bold tracking-widest border-b border-white/5">
                <tr>
-                  <th className="px-6 py-4">Nama Kategori</th>
-                  <th className="px-6 py-4 text-right">Aksi</th>
+                  <th className="px-8 py-5">Nama Kategori</th>
+                  <th className="px-8 py-5 text-right">Aksi</th>
                </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-white/5">
                {categories.map((cat) => (
-                  <tr key={cat.id} className="hover:bg-gray-50">
-                     <td className="px-6 py-4 font-medium text-dark">{cat.name}</td>
-                     <td className="px-6 py-4 text-right">
+                  <tr key={cat.id} className="hover:bg-white/5 transition group">
+                     <td className="px-8 py-5 font-bold text-white group-hover:text-gold transition">{cat.name}</td>
+                     <td className="px-8 py-5 text-right">
                         <button 
                            onClick={() => handleDelete(cat.id)}
-                           className="text-red-500 hover:bg-red-50 p-2 rounded-full transition"
+                           className="text-red-400 hover:bg-red-500/10 p-2.5 rounded-xl transition"
                            title="Hapus Kategori"
                         >
-                           <Trash2 size={16} />
+                           <Trash2 size={18} />
                         </button>
                      </td>
                   </tr>
                ))}
                {categories.length === 0 && !loading && (
                    <tr>
-                       <td colSpan={2} className="px-6 py-8 text-center text-gray-400">Belum ada kategori</td>
+                       <td colSpan={2} className="px-8 py-8 text-center text-gray-500">Belum ada kategori</td>
                    </tr>
                )}
             </tbody>

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Alert } from 'react-native';
+import { useToast } from './ToastContext';
 
 export interface CartItem {
   id: number;
@@ -31,6 +32,7 @@ export const useCart = () => {
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const { showToast } = useToast();
 
   const addToCart = (product: any) => {
     setItems(current => {
@@ -50,7 +52,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         quantity: 1 
       }];
     });
-    Alert.alert('Sukses', 'Produk ditambahkan ke keranjang');
+    showToast('Berhasil', 'Produk ditambahkan ke keranjang', 'success');
   };
 
   const removeFromCart = (id: number) => {

@@ -28,6 +28,11 @@ html {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+/* 3D Carousel Perspective */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

@@ -17,9 +17,12 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { AuthProvider } from '../context/AuthContext';
 import { CartProvider } from '../context/CartContext';
+import { ToastProvider } from '../context/ToastContext';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { checkConnection, API_URL } from '@/constants/Config';
+import { Alert } from 'react-native';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -55,6 +58,15 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
+      
+      checkConnection().then(isConnected => {
+        if (!isConnected) {
+          Alert.alert(
+            "Connection Error", 
+            `Could not connect to backend at ${API_URL}.\n\nEnsure backend is running on port 4000 and your device is on the same network.`
+          );
+        }
+      });
     }
   }, [loaded]);
 
@@ -64,9 +76,11 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
-      <CartProvider>
-        <RootLayoutNav />
-      </CartProvider>
+      <ToastProvider>
+        <CartProvider>
+          <RootLayoutNav />
+        </CartProvider>
+      </ToastProvider>
     </AuthProvider>
   );
 }
@@ -79,6 +93,12 @@ function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ headerShown: false }} />
+        <Stack.Screen name="about" options={{ headerShown: false }} />
+        <Stack.Screen name="cart" options={{ headerShown: false }} />
+        <Stack.Screen name="checkout" options={{ headerShown: false }} />
+        <Stack.Screen name="contact" options={{ headerShown: false }} />
+        <Stack.Screen name="programs" options={{ headerShown: false }} />
+        <Stack.Screen name="payment/[status]" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
       </Stack>
     </ThemeProvider>

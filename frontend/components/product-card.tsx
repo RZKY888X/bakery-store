@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Plus } from "lucide-react";
 import { useCart } from "@/context/cart-context";
+import { useToast } from "@/components/toast-provider";
 
 interface ProductCardProps {
   id: number;
@@ -20,10 +21,11 @@ export default function ProductCard({
   price,
 }: ProductCardProps) {
   const { addToCart } = useCart();
+  const { showToast } = useToast();
 
   const handleAddToCart = () => {
     addToCart({ id, name, price, image });
-    alert("Produk ditambahkan ke keranjang!");
+    showToast("Berhasil ditambahkan ke keranjang!", name, image);
   };
 
   return (

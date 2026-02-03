@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, RefreshControl, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, RefreshControl, Image, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/Colors';
 import { API_URL, fixImageUrl } from '@/constants/Config';
@@ -8,7 +8,7 @@ import CustomHeader from '@/components/CustomHeader';
 import { Package, Clock, CheckCircle, ChevronRight, ShoppingBag } from 'lucide-react-native';
 
 export default function OrdersScreen() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -25,7 +25,7 @@ export default function OrdersScreen() {
     try {
       const res = await fetch(`${API_URL}/orders/my-orders`, {
         headers: {
-          'Authorization': `Bearer ${user?.token}`
+          'Authorization': `Bearer ${token}`
         }
       });
       if (res.ok) {
@@ -137,9 +137,18 @@ export default function OrdersScreen() {
                     <Text style={styles.totalLabel}>Total Belanja</Text>
                     <Text style={styles.totalAmount}>Rp {item.totalAmount.toLocaleString('id-ID')}</Text>
                  </View>
-                 <View style={styles.detailBtn}>
-                    <Text style={styles.detailBtnText}>Detail</Text>
-                 </View>
+                 <TouchableOpacity 
+                    style={styles.detailBtn} 
+                    onPress={() => {
+                       Alert.alert(
+                         `Detail Pesanan #${item.id}`,
+                         `Alamat Pengiriman:\n${item.shippingAddress || '-'}\n\nMetode Pembayaran:\n${item.paymentMethod || '-'}\n\nTotal: Rp ${item.totalAmount.toLocaleString('id-ID')}`,
+                         [{ text: 'Tutup' }]
+                       );
+                    }}
+                 >
+                    <Text style={styles.detailBtnText}>Detail Info</Text>
+                 </TouchableOpacity>
               </View>
             </TouchableOpacity>
           )}

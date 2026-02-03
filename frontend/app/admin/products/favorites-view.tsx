@@ -80,15 +80,15 @@ export default function FavoritesView() {
     <div>
       <div className="flex justify-between items-end mb-8">
         <div>
-            <h3 className="font-bold text-xl mb-2">Atur Produk Favorit</h3>
-            <p className="text-gray-500 max-w-2xl text-sm">
+            <h3 className="font-display font-bold text-xl mb-2 text-white">Atur Produk Favorit</h3>
+            <p className="text-gray-400 max-w-2xl text-sm">
                 Pilih hingga 6 produk unggulan untuk halaman utama.
             </p>
         </div>
         <Link 
             href="/" 
             target="_blank"
-            className="flex items-center gap-2 bg-white border border-gray-200 text-dark font-bold px-3 py-1.5 rounded-lg hover:bg-gray-50 transition shadow-sm text-sm"
+            className="flex items-center gap-2 bg-[#1A1A1A] border border-white/10 text-white font-bold px-4 py-2 rounded-xl hover:bg-white/5 transition shadow-sm text-sm"
         >
             <ExternalLink size={14} /> Preview Live
         </Link>
@@ -97,24 +97,24 @@ export default function FavoritesView() {
       <div className="grid lg:grid-cols-12 gap-8">
          {/* Left Column: Selected */}
          <div className="lg:col-span-4 space-y-6">
-            <h4 className="font-bold text-md border-b-2 border-gold pb-2 mb-4">Terpilih ({favorites.length}/6)</h4>
+            <h4 className="font-bold text-md border-b-2 border-gold pb-2 mb-4 text-white">Terpilih ({favorites.length}/6)</h4>
             <div className="space-y-4">
                {favorites.map((product, index) => (
-                  <div key={product.id} className="bg-white border border-yellow-400 p-3 rounded-xl flex items-center gap-3 relative shadow-sm">
+                  <div key={product.id} className="bg-[#1A1A1A] border border-gold/50 p-3 rounded-2xl flex items-center gap-3 relative shadow-lg shadow-gold/5 group hover:border-gold transition">
                       <div className="absolute top-2 right-2 text-[10px] font-bold text-gold">#{index + 1}</div>
-                      <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden shrink-0">
+                      <div className="w-12 h-12 bg-[#252525] rounded-lg overflow-hidden shrink-0 border border-white/5">
                          <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
                       </div>
                       <div className="flex-1">
-                          <h4 className="font-bold text-xs text-dark line-clamp-1">{product.name}</h4>
-                          <p className="text-[10px] text-gray-500">Rp {product.price.toLocaleString("id-ID")}</p>
+                          <h4 className="font-bold text-xs text-white line-clamp-1 group-hover:text-gold transition">{product.name}</h4>
+                          <p className="text-[10px] text-gray-400 font-mono">Rp {product.price.toLocaleString("id-ID")}</p>
                       </div>
-                      <button onClick={() => toggleFavorite(product)} className="text-gray-400 hover:text-red-500 p-1"><Minus size={16} /></button>
+                      <button onClick={() => toggleFavorite(product)} className="text-gray-500 hover:text-red-400 p-1.5 transition"><Minus size={16} /></button>
                   </div>
                ))}
                {Array.from({ length: Math.max(0, 6 - favorites.length) }).map((_, i) => (
-                  <div key={i} className="border-2 border-dashed border-gray-200 rounded-xl p-4 flex flex-col items-center justify-center text-gray-400 bg-gray-50/50 h-20">
-                      <span className="text-[10px] font-bold">Slot Kosong</span>
+                  <div key={i} className="border-2 border-dashed border-white/5 rounded-2xl p-4 flex flex-col items-center justify-center text-gray-600 bg-white/5 h-20">
+                      <span className="text-[10px] font-bold uppercase tracking-widest">Slot Kosong</span>
                   </div>
                ))}
             </div>
@@ -124,11 +124,17 @@ export default function FavoritesView() {
          <div className="lg:col-span-8">
             <div className="flex gap-4 mb-6">
                <div className="relative flex-1">
-                   <input type="text" placeholder="Cari..." className="w-full pl-9 pr-4 py-2 border rounded-lg text-sm" value={search} onChange={(e) => setSearch(e.target.value)} />
-                   <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                   <input 
+                        type="text" 
+                        placeholder="Cari..." 
+                        className="w-full pl-10 pr-4 py-3 border border-white/10 rounded-xl text-sm bg-[#1A1A1A] text-white focus:border-gold outline-none transition" 
+                        value={search} 
+                        onChange={(e) => setSearch(e.target.value)} 
+                    />
+                   <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                </div>
                <select 
-                  className="border rounded-lg px-3 py-2 text-sm bg-white"
+                  className="border border-white/10 rounded-xl px-4 py-3 text-sm bg-[#1A1A1A] text-white focus:border-gold outline-none appearance-none"
                   value={filterCategory}
                   onChange={(e) => setFilterCategory(e.target.value)}
                >
@@ -136,17 +142,21 @@ export default function FavoritesView() {
                </select>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
                {catalog.map(product => (
-                  <div key={product.id} className="bg-white p-3 rounded-xl border border-gray-100 hover:shadow-md transition">
-                      <div className="h-32 bg-gray-100 rounded-lg mb-2 overflow-hidden relative">
-                         <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
-                         <span className="absolute bottom-1 right-1 bg-black/50 text-white text-[10px] px-1.5 rounded">{product.category}</span>
+                  <div key={product.id} className="bg-[#1A1A1A] p-4 rounded-2xl border border-white/5 hover:border-gold/30 hover:shadow-lg transition group">
+                      <div className="h-32 bg-[#252525] rounded-xl mb-3 overflow-hidden relative border border-white/5">
+                         <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+                         <span className="absolute bottom-1 right-1 bg-black/70 backdrop-blur-sm text-white text-[10px] px-2 py-0.5 rounded-lg border border-white/10">{product.category}</span>
                       </div>
-                      <h4 className="font-bold text-dark text-xs mb-1 line-clamp-1">{product.name}</h4>
-                      <p className="text-xs text-gray-500 mb-2">Rp {product.price.toLocaleString("id-ID")}</p>
-                      <button onClick={() => toggleFavorite(product)} disabled={favorites.length >= 6} className="w-full py-1.5 bg-gray-50 hover:bg-gold hover:text-dark text-dark rounded-lg text-xs font-bold transition flex justify-center items-center gap-1">
-                         <Plus size={12} /> Tambah
+                      <h4 className="font-bold text-white text-xs mb-1 line-clamp-1 group-hover:text-gold transition">{product.name}</h4>
+                      <p className="text-xs text-gray-400 mb-3 font-mono">Rp {product.price.toLocaleString("id-ID")}</p>
+                      <button 
+                        onClick={() => toggleFavorite(product)} 
+                        disabled={favorites.length >= 6} 
+                        className="w-full py-2 bg-white/5 hover:bg-gold hover:text-dark text-white rounded-xl text-xs font-bold transition flex justify-center items-center gap-1 border border-white/5 disabled:opacity-50 disabled:cursor-not-allowed"
+                     >
+                         <Plus size={14} /> Tambah
                       </button>
                   </div>
                ))}

@@ -8,7 +8,7 @@ export default function AboutScreen() {
       <CustomHeader title="Tentang Kami" showBack />
       <ScrollView contentContainerStyle={styles.content}>
         <Image 
-          source={{ uri: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=1000&auto=format&fit=crop' }}
+          source={require('@/assets/images/swadistalestari.png')}
           style={styles.heroImage}
         />
         

@@ -51,7 +51,7 @@ export default function TabOneScreen() {
         {/* Hero Section */}
         <View style={styles.hero}>
            <Image 
-              source={{ uri: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1000&auto=format&fit=crop' }} 
+              source={require('@/assets/images/mainbanner.png')} 
               style={styles.heroImage} 
            />
            <View style={styles.heroOverlay}>
@@ -79,7 +79,7 @@ export default function TabOneScreen() {
         <View style={styles.storySection}>
             <View style={styles.storyImageContainer}>
               <Image 
-                source={{ uri: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=1000&auto=format&fit=crop' }} 
+                source={require('@/assets/images/swadistalestari.png')} 
                 style={styles.storyImage} 
               />
               <View style={styles.floatingBadge}>
@@ -157,10 +157,24 @@ export default function TabOneScreen() {
             data={products}
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 20 }}
+            snapToInterval={width * 0.75 + 16}
+            decelerationRate="fast"
+            contentContainerStyle={{ 
+              paddingHorizontal: width * 0.125 - 8,
+              paddingBottom: 20 
+            }}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <TouchableOpacity style={styles.productCard}>
+            renderItem={({ item, index }) => (
+              <TouchableOpacity 
+                style={[
+                  styles.productCard,
+                  { 
+                    width: width * 0.75,
+                    marginHorizontal: 8,
+                  }
+                ]}
+                activeOpacity={0.9}
+              >
                 <View style={styles.imageContainer}>
                   <Image 
                     source={{ uri: fixImageUrl(item.image) }} 
@@ -176,17 +190,21 @@ export default function TabOneScreen() {
                 
                 <View style={styles.productContent}>
                    <Text style={styles.productTitle} numberOfLines={1}>{item.name}</Text>
-                   <Text style={styles.productPrice}>Rp {item.price.toLocaleString('id-ID')}</Text>
-                   
-                   <TouchableOpacity style={styles.buyBtn} onPress={() => addToCart(item)}>
-                      <ShoppingBag size={14} color="#fff" style={{ marginRight: 6 }} />
-                      <Text style={styles.buyBtnText}>Beli Sekarang</Text>
-                   </TouchableOpacity>
+                   <Text style={styles.productDesc} numberOfLines={2}>
+                     Nikmati kelezatan {item.name} yang dibuat dengan bahan premium pilihan.
+                   </Text>
+                   <View style={styles.priceRow}>
+                     <Text style={styles.productPrice}>Rp {item.price.toLocaleString('id-ID')}</Text>
+                     <TouchableOpacity style={styles.addToCartBtn} onPress={() => addToCart(item)}>
+                        <ShoppingBag size={18} color="#fff" />
+                     </TouchableOpacity>
+                   </View>
                 </View>
               </TouchableOpacity>
             )}
           />
         </View>
+
 
         {/* Location Section */}
         <View style={styles.locationContainer}>
@@ -224,7 +242,7 @@ export default function TabOneScreen() {
               </View>
               
               <Image 
-                 source={{ uri: 'https://images.unsplash.com/photo-1577962917302-cd874c4e3169?q=80&w=1000&auto=format&fit=crop' }} 
+                 source={require('@/assets/images/backgrounds/location-bg.png')} 
                  style={styles.locationFooterImage}
               />
            </View>
@@ -531,11 +549,14 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   productCard: {
-    width: width * 0.6,
-    marginRight: 16,
     backgroundColor: '#fff',
-    borderRadius: 12,
-    // No shadow for clean look
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 5,
+    overflow: 'hidden',
   },
   imageContainer: {
     position: 'relative',
@@ -575,19 +596,38 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   productContent: {
-    paddingHorizontal: 4,
+    padding: 16,
   },
   productTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: 'PlayfairDisplay_700Bold',
     color: '#333',
-    marginBottom: 4,
+    marginBottom: 6,
+  },
+  productDesc: {
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans_400Regular',
+    color: '#888',
+    marginBottom: 12,
+    lineHeight: 18,
+  },
+  priceRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   productPrice: {
-    fontSize: 14,
-    fontFamily: 'PlusJakartaSans_500Medium',
-    color: '#666',
-    marginBottom: 12,
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans_700Bold',
+    color: '#8B5E3C',
+  },
+  addToCartBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#8B5E3C',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buyBtn: {
     backgroundColor: '#8B5E3C',

@@ -32,84 +32,81 @@ export default function AdminReportsPage() {
 
   return (
     <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-            <h1 className="font-display text-3xl font-bold text-dark">Laporan Penjualan</h1>
-            <div className="bg-white border border-gray-200 rounded-lg p-1 flex shadow-sm">
-                <button 
-                    onClick={() => setFilter('today')}
-                    className={`px-4 py-1.5 font-bold text-xs rounded transition ${filter === 'today' ? 'bg-gold text-dark shadow-sm' : 'text-gray-500 hover:bg-gray-50'}`}
-                >
-                    Hari Ini
-                </button>
-                <button 
-                    onClick={() => setFilter('weekly')}
-                    className={`px-4 py-1.5 font-bold text-xs rounded transition ${filter === 'weekly' ? 'bg-gold text-dark shadow-sm' : 'text-gray-500 hover:bg-gray-50'}`}
-                >
-                    Mingguan
-                </button>
-                <button 
-                    onClick={() => setFilter('monthly')}
-                    className={`px-4 py-1.5 font-bold text-xs rounded transition ${filter === 'monthly' ? 'bg-gold text-dark shadow-sm' : 'text-gray-500 hover:bg-gray-50'}`}
-                >
-                    Bulanan
-                </button>
+        <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
+            <div>
+               <h1 className="font-display text-3xl font-bold text-white">Laporan Penjualan</h1>
+               <p className="text-gray-400 text-sm mt-1">Analisis performa bisnis dan tren penjualan.</p>
+            </div>
+            <div className="bg-[#1A1A1A] border border-white/5 rounded-xl p-1 flex shadow-lg">
+                {['today', 'weekly', 'monthly'].map((t) => (
+                    <button 
+                        key={t}
+                        onClick={() => setFilter(t)}
+                        className={`px-6 py-2 rounded-lg text-xs font-bold transition capitalize ${filter === t ? 'bg-gold text-dark shadow-lg shadow-gold/20' : 'text-gray-500 hover:text-white hover:bg-white/5'}`}
+                    >
+                        {t === 'today' ? 'Hari Ini' : t === 'weekly' ? 'Mingguan' : 'Bulanan'}
+                    </button>
+                ))}
             </div>
         </div>
 
-        {/* Summary Cards (Static for Demo, could be dynamic too) */}
+        {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                <p className="text-gray-500 text-sm mb-1">Total Pendapatan</p>
-                <h3 className="text-2xl font-bold text-dark mb-2">Rp 45.200.000</h3>
-                <span className="text-xs text-green-500 font-bold bg-green-50 px-2 py-1 rounded">+12.5%</span>
-            </div>
-             <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                <p className="text-gray-500 text-sm mb-1">Total Transaksi</p>
-                <h3 className="text-2xl font-bold text-dark mb-2">1,204</h3>
-                <span className="text-xs text-green-500 font-bold bg-green-50 px-2 py-1 rounded">+5.2%</span>
-            </div>
-             <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                <p className="text-gray-500 text-sm mb-1">Produk Terjual</p>
-                <h3 className="text-2xl font-bold text-dark mb-2">3,450</h3>
-                <span className="text-xs text-red-500 font-bold bg-red-50 px-2 py-1 rounded">-2.1%</span>
-            </div>
-             <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                <p className="text-gray-500 text-sm mb-1">Rata-rata Order</p>
-                <h3 className="text-2xl font-bold text-dark mb-2">Rp 125.000</h3>
-                <span className="text-xs text-green-500 font-bold bg-green-50 px-2 py-1 rounded">+8.4%</span>
-            </div>
+            {[
+                { label: "Total Pendapatan", value: "Rp 45.200.000", change: "+12.5%", positive: true, icon: "💰" },
+                { label: "Total Transaksi", value: "1,204", change: "+5.2%", positive: true, icon: "🧾" },
+                { label: "Produk Terjual", value: "3,450", change: "-2.1%", positive: false, icon: "📦" },
+                { label: "Rata-rata Order", value: "Rp 125.000", change: "+8.4%", positive: true, icon: "📊" },
+            ].map((stat, i) => (
+                <div key={i} className="bg-[#1A1A1A] p-6 rounded-3xl border border-white/5 shadow-xl shadow-black/20 group hover:-translate-y-1 transition-all duration-300">
+                    <div className="flex justify-between items-start mb-4">
+                        <p className="text-gray-500 text-xs font-bold uppercase tracking-wider">{stat.label}</p>
+                        <span className="text-xl grayscale group-hover:grayscale-0 transition opacity-50">{stat.icon}</span>
+                    </div>
+                    <h3 className="text-2xl font-display font-bold text-white mb-3">{stat.value}</h3>
+                    <span className={`text-[10px] font-bold px-2 py-1 rounded-full border ${stat.positive ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>
+                        {stat.change} vs periode lalu
+                    </span>
+                </div>
+            ))}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             {/* Sales Chart */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h3 className="font-bold text-lg mb-6">Grafik Penjualan ({filter === 'today' ? 'Per Jam' : filter === 'weekly' ? 'Per Hari' : 'Per Minggu'})</h3>
+            <div className="bg-[#1A1A1A] p-8 rounded-3xl shadow-lg border border-white/5">
+                <div className="mb-8">
+                     <h3 className="font-bold text-xl text-white">Grafik Penjualan</h3>
+                     <p className="text-sm text-gray-400 font-medium">{filter === 'today' ? 'Performa per Jam' : filter === 'weekly' ? 'Performa 7 Hari Terakhir' : 'Performa per Minggu'}</p>
+                </div>
                 <div className="h-80 w-full">
                     {loading ? (
-                         <div className="h-full flex items-center justify-center text-gray-400 text-sm">Loading data...</div>
+                         <div className="h-full flex items-center justify-center">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold"></div>
+                         </div>
                     ) : (
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={reportData}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                            <BarChart data={reportData} margin={{top: 0, right: 0, left: -20, bottom: 0}}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#333" />
                                 <XAxis 
                                     dataKey="name" 
                                     axisLine={false} 
                                     tickLine={false} 
-                                    tick={{fill: '#9CA3AF', fontSize: 12}}
+                                    tick={{fill: '#6B7280', fontSize: 10, fontWeight: 500}}
                                     dy={10}
                                 />
                                 <YAxis 
                                     axisLine={false} 
                                     tickLine={false} 
-                                    tick={{fill: '#9CA3AF', fontSize: 12}}
+                                    tick={{fill: '#6B7280', fontSize: 10, fontWeight: 500}}
                                     tickFormatter={(value) => `${value / 1000}k`}
                                 />
                                 <Tooltip 
-                                    cursor={{fill: 'transparent'}}
-                                    contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}}
+                                    cursor={{fill: '#ffffff05'}}
+                                    contentStyle={{borderRadius: '12px', border: '1px solid #333', backgroundColor: '#1A1A1A', color: 'white'}}
+                                    itemStyle={{color: '#fff', fontWeight: 'bold'}}
                                     formatter={(value: any) => [`Rp ${value.toLocaleString("id-ID")}`, "Sales"]}
                                 />
-                                <Bar dataKey="sales" fill="#D68C45" radius={[4, 4, 0, 0]} barSize={40} />
+                                <Bar dataKey="sales" fill="#D4AF37" radius={[6, 6, 0, 0]} barSize={32} />
                             </BarChart>
                         </ResponsiveContainer>
                     )}
@@ -117,12 +114,15 @@ export default function AdminReportsPage() {
             </div>
 
             {/* Popular Products (Static) */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <div className="flex justify-between items-center mb-6">
-                    <h3 className="font-bold text-lg">Produk Terlaris</h3>
-                    <button className="text-gold text-sm font-bold">Lihat Semua</button>
+            <div className="bg-[#1A1A1A] p-8 rounded-3xl shadow-lg border border-white/5">
+                <div className="flex justify-between items-center mb-8">
+                    <div>
+                        <h3 className="font-bold text-xl text-white">Produk Terlaris</h3>
+                        <p className="text-sm text-gray-400 font-medium">Top 5 item minggu ini</p>
+                    </div>
+                    <button className="text-gold text-xs font-bold hover:underline">Lihat Semua</button>
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-2">
                     {[
                         {name: "Butter Croissant Royale", category: "Pastry", sales: 450, revenue: "Rp 10.800.000"},
                         {name: "Traditional Baguette", category: "Breads", sales: 320, revenue: "Rp 5.760.000"},
@@ -130,15 +130,15 @@ export default function AdminReportsPage() {
                         {name: "Pain Au Chocolat", category: "Pastry", sales: 180, revenue: "Rp 5.040.000"},
                         {name: "Sourdough Country Loaf", category: "Sourdough", sales: 145, revenue: "Rp 6.960.000"},
                     ].map((product, i) => (
-                        <div key={i} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition">
+                        <div key={i} className="flex items-center justify-between p-4 hover:bg-white/5 rounded-2xl transition group border border-transparent hover:border-white/5">
                             <div className="flex items-center gap-4">
-                                <span className={`font-bold text-sm w-6 text-center ${i < 3 ? 'text-gold' : 'text-gray-400'}`}>#{i+1}</span>
+                                <span className={`font-bold text-xs w-6 h-6 rounded-full flex items-center justify-center ${i < 3 ? 'bg-gold text-dark' : 'bg-white/10 text-gray-400'}`}>#{i+1}</span>
                                 <div>
-                                    <h4 className="font-bold text-sm text-dark">{product.name}</h4>
-                                    <p className="text-xs text-gray-500">{product.category} • {product.sales} terjual</p>
+                                    <h4 className="font-bold text-sm text-white group-hover:text-gold transition">{product.name}</h4>
+                                    <p className="text-xs text-gray-400 font-medium">{product.category} • {product.sales} terjual</p>
                                 </div>
                             </div>
-                            <span className="font-bold text-sm text-dark">{product.revenue}</span>
+                            <span className="font-bold text-sm text-gold font-mono bg-gold/10 px-2 py-1 rounded-lg border border-gold/10">{product.revenue}</span>
                         </div>
                     ))}
                 </div>

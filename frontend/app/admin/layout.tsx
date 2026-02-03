@@ -47,99 +47,101 @@ export default function AdminLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 flex font-sans text-dark overflow-hidden relative">
+    <div className="min-h-screen bg-[#101010] flex font-sans text-white/90 overflow-hidden relative selection:bg-gold selection:text-white">
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 
-            className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 lg:hidden"
             onClick={() => setSidebarOpen(false)}
         ></div>
       )}
 
       {/* Sidebar */}
       <aside className={`
-          w-64 bg-white border-r border-gray-200 fixed h-full z-30 flex flex-col transition-transform duration-300
+          w-72 bg-[#151515] text-white fixed h-full z-50 flex flex-col transition-all duration-300 shadow-2xl border-r border-white/5
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
       `}>
-        <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-           <div className="flex items-center gap-3">
+        <div className="p-8 border-b border-white/5 flex justify-between items-center bg-[#151515]">
+           <Link href="/" className="block">
               <Image 
                 src="/Logoswadista1.svg" 
                 alt="Swadista Logo" 
-                width={140} 
-                height={50} 
-                className="object-contain w-auto h-12"
+                width={160} 
+                height={60} 
+                className="object-contain w-auto h-14"
               />
-           </div>
-           <button className="lg:hidden text-gray-500" onClick={() => setSidebarOpen(false)}>
-              <X size={20} />
+           </Link>
+           <button className="lg:hidden text-gray-400 hover:text-white transition" onClick={() => setSidebarOpen(false)}>
+              <X size={24} />
            </button>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          {menu.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition ${
-                  isActive
-                    ? "bg-yellow-50 text-gold border-l-4 border-gold"
-                    : "text-gray-500 hover:bg-gray-50 hover:text-dark"
-                }`}
-              >
-                <item.icon size={20} />
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
+        <div className="p-6">
+            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Main Menu</p>
+            <nav className="space-y-2">
+            {menu.map((item) => {
+                const isActive = pathname === item.href || (item.href !== "/admin" && pathname?.startsWith(item.href));
+                return (
+                <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all group relative overflow-hidden ${
+                    isActive
+                        ? "bg-gradient-to-r from-gold to-yellow-600 text-white shadow-lg shadow-gold/10"
+                        : "text-gray-400 hover:bg-white/5 hover:text-white"
+                    }`}
+                >
+                    <item.icon size={20} className={isActive ? "text-white" : "text-gray-500 group-hover:text-gold transition"} />
+                    <span className="relative z-10">{item.name}</span>
+                </Link>
+                );
+            })}
+            </nav>
+        </div>
 
-        <div className="p-4 border-t border-gray-100">
+        <div className="mt-auto p-6 border-t border-white/5 bg-[#151515]">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-3 w-full text-left text-red-500 hover:bg-red-50 rounded-lg text-sm font-medium transition"
+            className="flex items-center gap-3 px-4 py-3 w-full text-left text-red-400 hover:bg-red-500/10 hover:text-red-300 rounded-xl text-sm font-medium transition"
           >
             <LogOut size={20} />
-            Logout
+            Keluar Dashboard
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 lg:ml-64 flex flex-col h-screen overflow-auto relative">
+      <div className="flex-1 lg:ml-72 flex flex-col h-screen overflow-auto relative scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 px-4 md:px-8 py-4 flex justify-between items-center sticky top-0 z-10">
+        <header className="bg-[#101010]/80 backdrop-blur-md border-b border-white/5 px-6 md:px-10 py-5 flex justify-between items-center sticky top-0 z-30 transition-all">
            
            <div className="flex items-center gap-4">
-               <button className="lg:hidden p-2 text-gray-500" onClick={() => setSidebarOpen(true)}>
+               <button className="lg:hidden p-2 text-white hover:bg-white/10 rounded-lg transition" onClick={() => setSidebarOpen(true)}>
                    <Menu size={24} />
                </button>
-               <div className="hidden md:flex items-center gap-4 bg-gray-50 px-4 py-2 rounded-lg w-96">
-                  <span className="text-gray-400">🔍</span>
-                  <input type="text" placeholder="Cari transaksi, user..." className="bg-transparent text-sm w-full outline-none" />
-               </div>
+               <h2 className="hidden md:block font-display text-xl font-bold text-white">
+                  {menu.find(m => m.href === pathname)?.name || "Dashboard"}
+               </h2>
            </div>
            
            <div className="flex items-center gap-6">
-              <button className="relative text-gray-500 hover:text-dark">
-                 🔔
-                 <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-              </button>
-              <div className="flex items-center gap-3 border-l border-gray-200 pl-6">
-                  <div className="text-right hidden md:block">
-                     <p className="text-sm font-bold">{user.name}</p>
-                     <p className="text-[10px] text-gray-500 uppercase tracking-wide">Store Manager</p>
+              <div className="flex items-center gap-3">
+                  <div className="text-right hidden md:block leading-tight">
+                     <p className="text-sm font-bold text-white">{user.name}</p>
+                     <p className="text-[10px] text-gray-400 uppercase tracking-wide font-bold">Administrator</p>
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
-                     <img src={`https://ui-avatars.com/api/?name=${user.name}&background=random`} alt={user.name} />
+                  <div className="w-10 h-10 rounded-full bg-gold/10 p-0.5 border border-gold/20 shadow-lg shadow-gold/5">
+                     <img 
+                        src={`https://ui-avatars.com/api/?name=${user.name}&background=D4AF37&color=fff`} 
+                        alt={user.name} 
+                        className="w-full h-full rounded-full object-cover"
+                    />
                   </div>
               </div>
            </div>
         </header>
 
-        <div className="p-8">
+        <div className="p-6 md:p-10 max-w-7xl mx-auto w-full">
           {children}
         </div>
       </div>

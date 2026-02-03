@@ -6,14 +6,17 @@ import { useAuth } from '@/context/AuthContext';
 import { API_URL } from '@/constants/Config';
 import { useState } from 'react';
 import CustomHeader from '@/components/CustomHeader';
-import { MapPin, CreditCard, ArrowRight } from 'lucide-react-native';
+import { MapPin, CheckCircle, ArrowRight, User, Phone } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 
 export default function CheckoutScreen() {
   const { items, totalAmount, clearCart } = useCart();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const router = useRouter();
   
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -26,6 +29,16 @@ export default function CheckoutScreen() {
       return;
     }
 
+    if (!firstName.trim() || !lastName.trim()) {
+      Alert.alert('Data Tidak Lengkap', 'Mohon isi nama depan dan nama belakang.');
+      return;
+    }
+
+    if (!phone.trim()) {
+      Alert.alert('Data Tidak Lengkap', 'Mohon isi nomor telepon.');
+      return;
+    }
+
     if (!address.trim()) {
        Alert.alert('Alamat Kosong', 'Mohon isi alamat pengiriman.');
        return;
@@ -33,33 +46,52 @@ export default function CheckoutScreen() {
 
     setLoading(true);
     try {
+      // Create order directly without payment gateway
       const payload = {
         items: items.map(item => ({
           productId: item.id,
           quantity: item.quantity,
           price: item.price
         })),
-        totalAmount,
-        shippingAddress: address
+        totalAmount: totalAmount,
+        shippingAddress: address.trim(),
+        customerInfo: {
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          phone: phone.trim()
+        }
       };
 
       const res = await fetch(`${API_URL}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(payload)
       });
 
+      const data = await res.json();
+
       if (res.ok) {
         clearCart();
-        Alert.alert('Sukses', 'Pesanan berhasil dibuat!', [
-           { text: 'OK', onPress: () => router.replace('/(tabs)/orders') }
-        ]);
+        Alert.alert(
+          'Pesanan Berhasil! ✓', 
+          'Pesanan Anda telah diterima. Silakan lakukan pembayaran melalui transfer bank atau COD.',
+          [
+            { 
+              text: 'Lihat Pesanan', 
+              onPress: () => router.replace('/(tabs)/orders') 
+            },
+            { 
+              text: 'Ke Beranda', 
+              onPress: () => router.replace('/(tabs)'),
+              style: 'cancel'
+            }
+          ]
+        );
       } else {
-        const errData = await res.json();
-        Alert.alert('Gagal', errData.message || 'Terjadi kesalahan saat checkout.');
+        Alert.alert('Gagal', data.message || 'Terjadi kesalahan saat membuat pesanan.');
       }
 
     } catch (error) {
@@ -75,6 +107,43 @@ export default function CheckoutScreen() {
       <CustomHeader title="Checkout" showBack />
       
       <ScrollView contentContainerStyle={styles.content}>
+         {/* Customer Info Section */}
+         <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Informasi Pelanggan</Text>
+            
+            <View style={styles.inputRow}>
+              <View style={[styles.inputContainer, { flex: 1, marginRight: 8 }]}>
+                 <User size={18} color="#666" style={styles.inputIcon} />
+                 <TextInput 
+                    style={styles.inputSmall}
+                    placeholder="Nama Depan"
+                    value={firstName}
+                    onChangeText={setFirstName}
+                 />
+              </View>
+              <View style={[styles.inputContainer, { flex: 1, marginLeft: 8 }]}>
+                 <TextInput 
+                    style={styles.inputSmall}
+                    placeholder="Nama Belakang"
+                    value={lastName}
+                    onChangeText={setLastName}
+                 />
+              </View>
+            </View>
+
+            <View style={[styles.inputContainer, { marginTop: 12 }]}>
+               <Phone size={18} color="#666" style={styles.inputIcon} />
+               <TextInput 
+                  style={styles.inputSmall}
+                  placeholder="Nomor Telepon (08xxx)"
+                  value={phone}
+                  onChangeText={setPhone}
+                  keyboardType="phone-pad"
+               />
+            </View>
+         </View>
+
+         {/* Shipping Address */}
          <View style={styles.section}>
             <Text style={styles.sectionTitle}>Alamat Pengiriman</Text>
             <View style={styles.inputContainer}>
@@ -89,6 +158,7 @@ export default function CheckoutScreen() {
             </View>
          </View>
 
+         {/* Order Summary */}
          <View style={styles.section}>
             <Text style={styles.sectionTitle}>Ringkasan Pesanan</Text>
             {items.map((item) => (
@@ -104,11 +174,15 @@ export default function CheckoutScreen() {
             </View>
          </View>
 
+         {/* Payment Info */}
          <View style={styles.section}>
              <Text style={styles.sectionTitle}>Metode Pembayaran</Text>
              <View style={styles.paymentMethod}>
-                <CreditCard size={24} color="#8B5E3C" />
-                <Text style={styles.paymentText}>Transfer Bank (Konfirmasi Manual)</Text>
+                <CheckCircle size={24} color="#22C55E" />
+                <View style={styles.paymentInfo}>
+                   <Text style={styles.paymentText}>Transfer Bank / COD</Text>
+                   <Text style={styles.paymentSubtext}>Pembayaran langsung atau saat barang diterima</Text>
+                </View>
              </View>
          </View>
       </ScrollView>
@@ -123,7 +197,7 @@ export default function CheckoutScreen() {
               <ActivityIndicator color="#fff" />
             ) : (
               <>
-                <Text style={styles.payBtnText}>Bayar Sekarang</Text>
+                <Text style={styles.payBtnText}>Konfirmasi Pesanan</Text>
                 <ArrowRight size={18} color="#fff" />
               </>
             )}
@@ -159,6 +233,9 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 12,
   },
+  inputRow: {
+    flexDirection: 'row',
+  },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -177,6 +254,13 @@ const styles = StyleSheet.create({
     color: '#333',
     minHeight: 60,
     textAlignVertical: 'top',
+  },
+  inputSmall: {
+    flex: 1,
+    fontFamily: 'PlusJakartaSans_400Regular',
+    fontSize: 14,
+    color: '#333',
+    paddingVertical: 4,
   },
   summaryItem: {
     flexDirection: 'row',
@@ -219,15 +303,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     padding: 12,
-    backgroundColor: '#FDFBF7',
+    backgroundColor: '#F0FDF4',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#EBD5B3',
+    borderColor: '#BBF7D0',
+  },
+  paymentInfo: {
+    flex: 1,
   },
   paymentText: {
     fontSize: 14,
-    fontFamily: 'PlusJakartaSans_500Medium',
-    color: '#5D4037',
+    fontFamily: 'PlusJakartaSans_600SemiBold',
+    color: '#166534',
+  },
+  paymentSubtext: {
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans_400Regular',
+    color: '#22C55E',
+    marginTop: 2,
   },
   footer: {
     padding: 20,
