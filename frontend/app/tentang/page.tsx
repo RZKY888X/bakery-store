@@ -1,3 +1,6 @@
+// ==========================================================================
+// Frontend/app/tentang/page.tsx
+// ==========================================================================
 import Image from "next/image";
 import AchievementCard from "./achievement-card";
 

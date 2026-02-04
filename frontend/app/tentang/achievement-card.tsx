@@ -1,3 +1,6 @@
+// ==========================================================================
+// Frontend/app/tentang/achievement-card.tsx
+// ==========================================================================
 import Image from "next/image";
 
 interface AchievementProps {
